@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/11 23:36:10 by clu               #+#    #+#              #
-#    Updated: 2025/03/11 23:38:01 by clu              ###   ########.fr        #
+#    Updated: 2025/03/12 12:49:47 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ OBJ_DIR 		= ./obj
 # Libraries
 
 # Header files
+HEADERS = -I include
 HEADERS_DEP = include/philo.h
 
 # Source files and object files
@@ -44,13 +45,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS_DEP)
 	$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 
 clean:
-	@make -C $(LIBFT_DIR) clean
 	@rm -rf $(OBJ_DIR)
 	@echo "Cleaned up all object files"
 
 fclean: clean
 	@rm -f $(NAME)
-	@make -C $(LIBFT_DIR) fclean
 	@echo "Cleaned up $(NAME)"
 	@echo "Cleaned up everything"
 

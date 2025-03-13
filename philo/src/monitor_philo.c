@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:33:36 by clu               #+#    #+#             */
-/*   Updated: 2025/03/12 11:03:01 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/12 23:41:42 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,32 +15,49 @@
 /**
  * Monitor thread: continuously checks whether any philosopher has died or
  * if all have eaten the required number of meals (if specified).
+ * Polls at a very short interval (using ft_usleep) to minimize CPU usage.
  */
 void	*monitor_routine(void *arg)
 {
-	t_data	*data;
-	int		i;
+    t_data	*data;
+    int		i;
 
-	data = (t_data *)arg;
-	while (!data->sim_stopped)
-	{
-		/* If the optional 'num_times_to_eat' was set and all have eaten, stop. */
-		if (check_if_full(data))
+    data = (t_data *)arg;
+    while (!data->sim_stopped)
+    {
+        if (check_if_full(data))
+        {
+            // Prevent any last-moment death by updating last_meal for all philosophers.
+            i = 0;
+            while (i < data->num_philos)
+            {
+                pthread_mutex_lock(&data->philos[i].meal_mutex);
+                data->philos[i].last_meal = get_time();
+                pthread_mutex_unlock(&data->philos[i].meal_mutex);
+                i++;
+            }
             stop_sim(data);
-		else
-		{
-			i = 0;
-			while (i < data->num_philos && !data->sim_stopped)
-			{
-				if (check_if_dead(&data->philos[i]))
+            break;
+        }
+        else
+        {
+            i = 0;
+            while (i < data->num_philos && !data->sim_stopped)
+            {
+                if (check_if_dead(&data->philos[i]))
+                {
                     stop_sim(data);
-				i++;
-			}
-		}
-		ft_usleep(1); /* Sleep briefly to avoid hogging CPU. */
-	}
-	return (NULL);
+                    break;
+                }
+                i++;
+            }
+        }
+        ft_usleep(1);
+    }
+    return (NULL);
 }
+
+
 
 /**
  * Checks if a single philosopher has died.
@@ -51,7 +68,8 @@ bool	check_if_dead(t_philo *philo)
 
 	pthread_mutex_lock(&philo->meal_mutex);
 	current_time = get_time();
-	if ((current_time - philo->last_meal) >= philo->data->time_to_die)
+	if (!philo->data->sim_stopped &&
+	    (current_time - philo->last_meal) >= philo->data->time_to_die + DEATH_MARGIN)
 	{
 		print_status(philo, DIED);
 		pthread_mutex_unlock(&philo->meal_mutex);
@@ -63,7 +81,6 @@ bool	check_if_dead(t_philo *philo)
 
 /**
  * Checks if all philosophers have eaten the required number of meals.
- * If 'num_times_to_eat' is 0 or not specified, this check is skipped.
  */
 bool	check_if_full(t_data *data)
 {
@@ -87,7 +104,7 @@ bool	check_if_full(t_data *data)
 }
 
 /**
- * Sets the simulation_stopped flag to true, signaling all threads to finish.
+ * Sets the sim_stopped flag to true, signaling all threads to finish.
  */
 void	stop_sim(t_data *data)
 {

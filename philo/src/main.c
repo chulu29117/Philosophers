@@ -6,14 +6,15 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 09:24:55 by clu               #+#    #+#             */
-/*   Updated: 2025/03/12 11:37:39 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/13 11:29:37 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * Main function: initializes the program, starts simulation
+ * Main function: initializes the program, starts the simulation,
+ * and cleans up resources.
  */
 int	main(int argc, char **argv)
 {
@@ -24,11 +25,18 @@ int	main(int argc, char **argv)
 	if (!parse_arguments(argc, argv, &data))
 		return (1);
 	data.eating_philos = 0;
+	// Initialize simulation duration.
+	// If a required number of meals is specified, we estimate duration based on eating and sleeping times.
+	// Otherwise, we set a default duration (e.g., 5 times the time_to_die).
+	if (data.num_times_to_eat > 0)
+		data.sim_duration = data.num_times_to_eat * (data.time_to_eat + data.time_to_sleep);
+	else
+		data.sim_duration = data.time_to_die * 5;	// Initialize the host mutex used to protect the eating counter.
 	if (pthread_mutex_init(&data.host_mutex, NULL) != 0)
 	{
-		perror("Failed to initialize host_mutex");
+		printf("Failed to initialize host_mutex");
 		return (1);
-	}		
+	}
 	if (!init_forks(&data))
 		return (1);
 	if (!init_philos(&data))
@@ -42,12 +50,19 @@ int	main(int argc, char **argv)
 		free(data.philos);
 		return (1);
 	}
-	end_sim(&data);
+	// Join only the monitor thread since philosopher threads are detached.
+	join_threads(&data);
+	// Cleanup all resources.
+	destroy_mutexes(&data);
+	free(data.forks);
+	free(data.philos);
+	pthread_mutex_destroy(&data.host_mutex);
 	return (0);
 }
 
 /**
- * Joins philosopher threads
+ * Joins the monitor thread.
+ * (Philosopher threads are detached to prevent blocking on deadlocks.)
  */
 void	join_threads(t_data *data)
 {
@@ -55,7 +70,7 @@ void	join_threads(t_data *data)
 }
 
 /**
- * Destroys mutex locks
+ * Destroys all mutex locks.
  */
 void	destroy_mutexes(t_data *data)
 {
@@ -77,7 +92,7 @@ void	destroy_mutexes(t_data *data)
 }
 
 /**
- * Waits for threads to finish and cleans up resources
+ * Cleans up resources after simulation ends.
  */
 void	end_sim(t_data *data)
 {

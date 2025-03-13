@@ -6,11 +6,11 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:35:10 by clu               #+#    #+#             */
-/*   Updated: 2025/03/12 10:58:16 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/13 11:33:48 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "philo.h"
+#include "philo.h"
 
 /**
  * Returns the current time in milliseconds.
@@ -24,8 +24,8 @@ long long	get_time(void)
 }
 
 /**
- * Custom usleep that accounts for potential inaccuracies of usleep.
- * Sleeps in small increments until the desired time has elapsed.
+ * Custom usleep that loops in small intervals (SLEEP_INTERVAL microseconds).
+ * This allows threads to frequently check if the simulation has been stopped.
  */
 void	ft_usleep(long long time_in_ms)
 {
@@ -33,12 +33,12 @@ void	ft_usleep(long long time_in_ms)
 
 	start = get_time();
 	while ((get_time() - start) < time_in_ms)
-		usleep(100);
+		usleep(SLEEP_INTERVAL);
 }
 
 /**
- * Prints a status message (e.g., "is eating", "has taken a fork", etc.)
- * Uses the print_mutex to avoid interleaved prints.
+ * Prints a status message (e.g., "is eating", "has taken a fork", etc.).
+ * Uses print_mutex to prevent interleaved output and flushes stdout immediately.
  */
 void	print_status(t_philo *philo, int status)
 {
@@ -58,15 +58,8 @@ void	print_status(t_philo *philo, int status)
 			printf("%lld %d is thinking\n", timestamp, philo->id);
 		else if (status == DIED)
 			printf("%lld %d died\n", timestamp, philo->id);
+		// Ensure immediate output for debugging and test feedback.
+		fflush(stdout);
 	}
 	pthread_mutex_unlock(&philo->data->print_mutex);
-}
-
-/**
- * Simple function to print an error message and exit.
- */
-void	error_exit(char *msg)
-{
-	printf("%s\n", msg);
-	exit(EXIT_FAILURE);
 }

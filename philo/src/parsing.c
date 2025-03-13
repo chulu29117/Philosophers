@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 23:34:42 by clu               #+#    #+#             */
-/*   Updated: 2025/03/12 10:53:28 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/13 11:31:55 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,20 @@
  */
 bool	parse_arguments(int argc, char **argv, t_data *data)
 {
+	// Check if all required arguments are numeric.
 	if (!is_num(argv[1]) || !is_num(argv[2])
 		|| !is_num(argv[3]) || !is_num(argv[4]))
 		return (false);
-
 	data->num_philos = ft_atoi(argv[1]);
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
+	// Ensure that time_to_die is greater than the sum of time_to_eat and time_to_sleep.
+	if (data->time_to_die <= data->time_to_eat + data->time_to_sleep)
+	{
+		printf("Error: time_to_die must be greater than time_to_eat + time_to_sleep.\n");
+		return (false);
+	}
 	if (data->num_philos <= 0 || data->time_to_die < 0
 		|| data->time_to_eat < 0 || data->time_to_sleep < 0)
 		return (false);
@@ -45,7 +51,7 @@ bool	parse_arguments(int argc, char **argv, t_data *data)
 }
 
 /**
- * Checks if a string is numeric (optional sign + digits).
+ * Checks if a string is numeric (allows an optional sign).
  */
 bool	is_num(char *str)
 {
@@ -66,7 +72,7 @@ bool	is_num(char *str)
 }
 
 /**
- * Simple atoi with basic overflow check. Returns -1 if out of range.
+ * Simple atoi with basic overflow check.
  */
 int	ft_atoi(const char *str)
 {

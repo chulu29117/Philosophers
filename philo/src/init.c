@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 22:42:40 by clu               #+#    #+#             */
-/*   Updated: 2025/05/20 23:23:03 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 01:22:26 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,6 @@ bool	init_forks(t_data *data)
 }
 
 /*
-** Destroy up to 'initialized' fork mutexes and free the forks array.
-*/
-void	cleanup_forks(t_data *data, int initialized)
-{
-	int	i;
-	
-	i = 0;
-	while (i < initialized)
-	{
-		// destroy each initialized fork mutex
-		pthread_mutex_destroy(&data->forks[i]);
-		i++;
-	}
-	free(data->forks);
-}
-
-/*
 ** Initialize a single philosopher structure:
 **  - assign IDs, forks, and initial state
 **  - initialize the per-philosopher meal mutex
@@ -96,18 +79,18 @@ bool	init_philos(t_data *data)
 	int	i;
 
 	/* Allocate array for philosopher structs */
-	data->philos = malloc(sizeof(t_philo) * data->num_philos);
-	if (!data->philos)
+	data->philo = malloc(sizeof(t_philo) * data->num_philos);
+	if (!data->philo)
 		return (false);
 	i = 0;
 	while (i < data->num_philos)
 	{
-		if (!init_philo(&data->philos[i], i, data))
+		if (!init_philo(&data->philo[i], i, data))
 		{
 			// Cleanup previously initialized philosopher mutexes
 			while (--i >= 0)
-				pthread_mutex_destroy(&data->philos[i].meal_mutex);
-			free(data->philos);
+				pthread_mutex_destroy(&data->philo[i].meal_mutex);
+			free(data->philo);
 			return (false);
 		}
 		i++;
@@ -126,20 +109,32 @@ bool	start_sim(t_data *data)
 {
 	int	i;
 	
-	/* Record the moment simulation begins for timestamping */
+	/* 1) Record real simulation start time */
 	data->start_time = get_time();
-	/* Spawn philosopher threads */
+	/* 2) Initialize last_meal for every philosopher */
 	i = 0;
 	while (i < data->num_philos)
 	{
-		/* Each thread runs philo_routine, taking & returning forks */
-		if (pthread_create(&data->philos[i].thread, NULL
-							, philo_routine, &data->philos[i]) != 0)
-			return (false);
+		data->philo[i].last_meal = data->start_time; // reset last meal time
 		i++;
 	}
-	/* Spawn a separate monitor thread to watch for death or completion */
+	/* 3) Spawn philosopher threads */
+	i = 0;
+	while (i < data->num_philos)
+	{
+		if (pthread_create(&data->philo[i].thread, NULL,
+							philo_routine, &data->philo[i]) != 0)
+			return (false);
+		ft_usleep(100);
+		i++;
+	}
+	/* Spawn monitor thread */
 	if (pthread_create(&data->monitor, NULL, monitor_routine, data) != 0)
+	{
+		/* Detach all philosopher threads on failure */
+		while (i-- > 0)
+			pthread_detach(data->philo[i].thread);
 		return (false);
+	}
 	return (true);
 }

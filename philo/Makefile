@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/11 23:36:10 by clu               #+#    #+#              #
-#    Updated: 2025/05/20 22:41:44 by clu              ###   ########.fr        #
+#    Updated: 2025/05/26 13:16:03 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ HEADERS = -I include
 HEADERS_DEP = include/philo.h
 
 # Source files and object files
-SRC = main.c init_philo.c philo_routine.c monitor.c utils.c parsing.c
+SRC = $(SRC_DIR)philo.c $(SRC_DIR)init.c $(SRC_DIR)philo_routine.c \
+		$(SRC_DIR)monitor.c $(SRC_DIR)utils.c
 OBJ = $(SRC:$(SRC_DIR)%=$(OBJ_DIR)/%)
 OBJ := $(OBJ:.c=.o)
 

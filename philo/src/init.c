@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 22:42:40 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 02:58:44 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 03:02:54 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ bool	init_forks(t_data *data)
 	/* Initialize the mutex used for synchronized printing */
 	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
 	{
-		/* On failure, clean up all fork mutexes and allocated memory */
 		printf("Failed to init print mutex\n");
 		cleanup_forks(data, data->num_philos);
 		return (false);
@@ -144,7 +143,7 @@ bool	start_sim(t_data *data)
 			pthread_detach(data->philo[i].thread);
 			i++;
 		}
-		stop_sim(data);
+		end_sim(data);
 		return (false);
 	}
 	return (true);

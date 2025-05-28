@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:51:32 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 02:55:05 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 03:01:15 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ void	print_status(t_philo *philo, int status)
 	if (can_print)
 	{
 		if (status == FORK_TAKEN)
-			printf("%lld %d has taken a fork\n", ts, philo->id);
+		printf("%lld %d has taken a fork\n", ts, philo->id);
 		else if (status == EATING)
-			printf("%lld %d is eating\n", ts, philo->id);
+		printf("%lld %d is eating\n", ts, philo->id);
 		else if (status == SLEEPING)
-			printf("%lld %d is sleeping\n", ts, philo->id);
+		printf("%lld %d is sleeping\n", ts, philo->id);
 		else if (status == THINKING)
-			printf("%lld %d is thinking\n", ts, philo->id);
+		printf("%lld %d is thinking\n", ts, philo->id);
 		else if (status == DIED)
 		{
 			printf("%lld %d died\n", ts, philo->id);
@@ -67,6 +67,16 @@ void	print_status(t_philo *philo, int status)
 		}
 	}
 	pthread_mutex_unlock(&philo->data->print_mutex);
+}
+
+/*
+** Stop the simulation by setting the stop flag
+*/
+void	stop_sim(t_data *data)
+{
+	pthread_mutex_lock(&data->print_mutex);
+	data->sim_stopped = true;
+	pthread_mutex_unlock(&data->print_mutex);
 }
 
 /*
@@ -131,15 +141,6 @@ int	print_usage(void)
 	return (EXIT_FAILURE);
 }
 
-/*
-** Stop the simulation by setting the stop flag
-*/
-void	stop_sim(t_data *data)
-{
-	pthread_mutex_lock(&data->print_mutex);
-	data->sim_stopped = true;
-	pthread_mutex_unlock(&data->print_mutex);
-}
 
 /*
 ** Parse and validate command-line arguments

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 02:46:32 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 03:00:30 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@
 
 /* Sleep interval for ft_usleep */
 # define SLEEP_INTERVAL 100
-
-/* Max ms to delay death report*/
-# define DEATH_MARGIN 10
 
 /* Declaration */
 typedef struct s_data t_data;

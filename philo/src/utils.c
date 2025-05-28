@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:51:32 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 02:48:12 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 02:55:05 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,9 +136,9 @@ int	print_usage(void)
 */
 void	stop_sim(t_data *data)
 {
-	pthread_mutex_lock(&data->philo->meal_mutex);
+	pthread_mutex_lock(&data->print_mutex);
 	data->sim_stopped = true;
-	pthread_mutex_unlock(&data->philo->meal_mutex);
+	pthread_mutex_unlock(&data->print_mutex);
 }
 
 /*

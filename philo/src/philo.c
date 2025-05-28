@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 21:43:08 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 02:46:04 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 02:55:52 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	destroy_mutexes(t_data *data)
 		pthread_mutex_destroy(&data->forks[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&data->print_mutex);
 }
 
 /*

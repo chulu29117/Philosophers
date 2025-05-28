@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 22:42:40 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 01:22:26 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/28 02:58:44 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,14 @@ bool	start_sim(t_data *data)
 	{
 		if (pthread_create(&data->philo[i].thread, NULL,
 							philo_routine, &data->philo[i]) != 0)
+		{
+			/* Join any already-started threads */
+			while (--i >= 0)
+				pthread_join(data->philo[i].thread, NULL);
+			/* Clean up mutexes & memory */
+			end_sim(data);
 			return (false);
+		}
 		ft_usleep(100);
 		i++;
 	}
@@ -132,8 +139,12 @@ bool	start_sim(t_data *data)
 	if (pthread_create(&data->monitor, NULL, monitor_routine, data) != 0)
 	{
 		/* Detach all philosopher threads on failure */
-		while (i-- > 0)
+		while (i < data->num_philos)
+		{
 			pthread_detach(data->philo[i].thread);
+			i++;
+		}
+		stop_sim(data);
 		return (false);
 	}
 	return (true);

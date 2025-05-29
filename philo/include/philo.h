@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 11:04:50 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 17:00:15 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <sys/time.h>
 # include <limits.h>
 # include <stdbool.h>
-# include <stdatomic.h>
 
 /*
 ** Usage message for invalid arguments
@@ -38,7 +37,7 @@
 # define DIED 		5
 
 /* Sleep interval for ft_usleep */
-# define SLEEP_INTERVAL	100
+# define SLEEP_INTERVAL	1000
 
 /* Declaration */
 typedef struct s_data	t_data;
@@ -49,7 +48,6 @@ typedef struct s_fork	t_fork;
 typedef struct s_fork
 {
 	pthread_mutex_t	lock;
-	// _Atomic bool	in_use;
 }	t_fork;
 
 /* Philosopher struct */
@@ -74,6 +72,8 @@ typedef struct s_data
 	long			start;
 	pthread_t		monitor_thread;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	stop_mutex;
+	pthread_mutex_t	waiter;
 	t_fork			*forks;
 	t_philo			*philos;
 }	t_data;

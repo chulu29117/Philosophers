@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:51:32 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 10:51:50 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 17:31:56 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,18 @@ long	timestamp(void)
 int	time_checks(t_philo *philos, int type)
 {
 	long	diff;
+	long	curr_time;
+
+	if (philos->data->stop)
+		return (1);
 	if (type == EATING)
 		return ((int)(timestamp() - philos->data->start));
 	if (type == SLEEPING)
 	{
-		diff = timestamp() - philos->last_meal;
+		pthread_mutex_lock(&philos->meal_mutex);
+		curr_time = timestamp();
+		diff = curr_time - philos->last_meal;
+		pthread_mutex_unlock(&philos->meal_mutex);
 		if (diff >= philos->data->t_to_die)
 		{
 			print_status(philos, DIED);
@@ -40,14 +47,16 @@ int	time_checks(t_philo *philos, int type)
 	}
 	return (0);
 }
-
-/*
-** sleep in small increments, checking death each time
-*/
+	
+	/*
+	** sleep in small increments, checking death each time
+	*/
 void	ft_usleep(long ms, t_philo *philos)
 {
 	long	start;
 
+	if (ms <= 0 || philos->data->stop)
+		return ;
 	start = timestamp();
 	while (!philos->data->stop && (timestamp() - start < ms))
 	{
@@ -62,7 +71,7 @@ void	print_status(t_philo *philos, int state)
 	long	time;
 
 	pthread_mutex_lock(&philos->data->print_mutex);
-	if (!philos->data->stop)
+	if (!philos->data->stop || state == DIED)
 	{
 		time = timestamp() - philos->data->start;
 		if (state == FORK_TAKEN)
@@ -76,7 +85,9 @@ void	print_status(t_philo *philos, int state)
 		else if (state == DIED)
 		{
 			printf("%ld %d died\n", time, philos->id);
+			pthread_mutex_lock(&philos->data->stop_mutex);
 			philos->data->stop = true;
+			pthread_mutex_unlock(&philos->data->stop_mutex);		
 		}
 	}
 	pthread_mutex_unlock(&philos->data->print_mutex);

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 10:30:58 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 00:35:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 17:18:20 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,20 @@ static bool	is_dead(t_data *data)
 {
 	int		i;
 	long	diff;
+	long	now;
 
 	i = 0;
+	now = timestamp();
 	while (i < data->num_philos)
 	{
 		pthread_mutex_lock(&data->philos[i].meal_mutex);
-		diff = timestamp() - data->philos[i].last_meal;
+		diff = now - data->philos[i].last_meal;
 		pthread_mutex_unlock(&data->philos[i].meal_mutex);
-		if (diff > data->t_to_die)
+		if (diff >= data->t_to_die)
 		{
+			pthread_mutex_lock(&data->stop_mutex);
+			data->stop = true;
+			pthread_mutex_unlock(&data->stop_mutex);
 			print_status(&data->philos[i], DIED);
 			return (true);
 		}
@@ -58,6 +63,12 @@ static bool	is_all_full(t_data *data)
 		}
 		i++;
 	}
+	if (full)
+	{
+		pthread_mutex_lock(&data->stop_mutex);
+		data->stop = true;
+		pthread_mutex_unlock(&data->stop_mutex);
+	}
 	return (full);
 }
 
@@ -72,16 +83,15 @@ void	*monitor_routine(void *arg)
 	while (!data->stop)
 	{
 		if (is_dead(data))
-		{
-			data->stop = true;
-			break ;
-		}
+			return (NULL);
 		if (is_all_full(data))
 		{
+			pthread_mutex_lock(&data->stop_mutex);
 			data->stop = true;
-			break ;
+			pthread_mutex_unlock(&data->stop_mutex);
+			return (NULL);
 		}
-		usleep(1000);
+		usleep(SLEEP_INTERVAL);
 	}
 	return (NULL);
 }

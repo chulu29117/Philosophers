@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:23:44 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 11:05:27 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 17:33:17 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static void	single_philo(t_philo *philos)
 	pthread_mutex_lock(&philos->data->forks[philos->id - 1].lock);
 	print_status(philos, FORK_TAKEN);
 	ft_usleep(philos->data->t_to_die, philos);
-	print_status(philos, DIED);
 	pthread_mutex_unlock(&philos->data->forks[philos->id - 1].lock);
 }
 
@@ -44,10 +43,12 @@ static bool	pick_forks(t_philo *philos, int *first, int *second)
 		*first = right;
 		*second = left;
 	}
+	pthread_mutex_lock(&philos->data->waiter);
 	pthread_mutex_lock(&philos->data->forks[*first].lock);
 	print_status(philos, FORK_TAKEN);	
 	pthread_mutex_lock(&philos->data->forks[*second].lock);
 	print_status(philos, FORK_TAKEN);
+	pthread_mutex_unlock(&philos->data->waiter);
 	return (true);
 }
 

@@ -1,76 +1,7 @@
-1 200 60 60 1: Philosopher did not die
-
-1 200 60 60 2: Philosopher did not die
-
-1 100 60 60 2: Philosopher did not die
-
-1 500 100 100 2: Philosopher did not die
-
-1 500 100 100 10: Philosopher did not die
-
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
-2 100 2147483648 60: Program timed out. Possible infinite loop
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 130 Philo 2 sleep timestamp: 195 Philo 2 think timestamp: 260
-
-5 610 200 200 5: Philosopher died
-	
-
-5 300 60 60 15: Philosopher died
-	
-
 -- Death Tests --
 
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Philosopher died
-	
-
-5 610 200 200 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
-
-5 300 60 60 15: Philosopher died
-	
-
--- Death Tests --
-
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Philosopher died
-	
-
--- Death Tests --
+3 210 100 100 5: Timestamp error: Non numerical
+	Time of death:  Last meal: 0
 
 ---- TRACE ENDS ----
 
@@ -101,13 +32,10 @@
 
 -- No Death Tests --
 
-3 200 65 65 5: Philosopher died
-	
-
-5 610 200 200 5: Philosopher died
-	
-
 -- Death Tests --
+
+3 210 100 100 5: Timestamp error: Non numerical
+	Time of death:  Last meal: 0
 
 ---- TRACE ENDS ----
 
@@ -121,12 +49,67 @@
 
 -- No Death Tests --
 
-3 200 65 65 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 65 Philo 2 sleep timestamp: 130 Philo 2 think timestamp: 195
+11 900 150 90 20: Philosophers did not eat for the correct time
+	Expected: 150 Actual: 
+
+-- Death Tests --
+
+3 210 100 100 5: Timestamp error: Non numerical
+	Time of death:  Last meal: 0
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+3 210 100 100 5: Timestamp error: Non numerical
+	Time of death:  Last meal: 0
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+4 210 100 100 10: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
+4 410 200 200 10: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
+4 600 200 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
+
+5 610 200 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
 
 5 800 200 200 7: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
 
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 100 Philo 2 sleep timestamp: 200 Philo 2 think timestamp: 300
+
+11 900 150 90 20: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 150 Philo 2 sleep timestamp: 300 Philo 2 think timestamp: 390
+
 -- Death Tests --
 
 ---- TRACE ENDS ----
@@ -139,37 +122,27 @@
 
 -- One Philosopher Tests --
 
-1 200 60 60 1: Philosopher did not die on time
-Simulation start: 0 Death: 190
-
-1 200 60 60 2: Philosopher did not die on time
-Simulation start: 0 Death: 190
-
-1 100 60 60 2: Philosopher did not die on time
-Simulation start: 1 Death: 90
-
-1 500 100 100 2: Philosopher did not die on time
-Simulation start: 0 Death: 490
-
-1 500 100 100 10: Philosopher did not die on time
-Simulation start: 0 Death: 490
-
-1 1000 250 250 2: Philosopher did not die on time
-Simulation start: 1 Death: 990
-
-1 100 150 150 10: Philosopher did not die on time
-Simulation start: 0 Death: 90
-
 -- No Death Tests --
 
-2 130 60 60 4: Timestamp error: Non numerical
+4 210 100 100 10: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
-3 200 65 65 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+5 610 200 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
 
-3 310 100 200 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+5 800 200 200 7: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 100 Philo 2 sleep timestamp: 200 Philo 2 think timestamp: 300
+
+11 900 150 90 20: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 150 Philo 2 sleep timestamp: 300 Philo 2 think timestamp: 390
+
+-- Death Tests --
 
 
 ============================================================
@@ -180,34 +153,720 @@ Simulation start: 0 Death: 90
 
 -- One Philosopher Tests --
 
-1 200 60 60 1: Philosopher did not die on time
-Simulation start: 1 Death: 190
+-- No Death Tests --
 
-1 200 60 60 2: Philosopher did not die on time
-Simulation start: 0 Death: 190
+10 500 100 100 50: Philosopher died
+	
 
-1 100 60 60 2: Philosopher did not die on time
-Simulation start: 0 Death: 90
+-- Death Tests --
 
-1 500 100 100 2: Philosopher did not die on time
-Simulation start: 0 Death: 490
+---- TRACE ENDS ----
 
-1 500 100 100 10: Philosopher did not die on time
-Simulation start: 0 Death: 490
+============================================================
 
-1 1000 250 250 2: Philosopher did not die on time
-Simulation start: 0 Death: 990
+----- TRACE BEGINS -----
 
-1 100 150 150 10: Philosopher did not die on time
-Simulation start: 0 Death: 90
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 800 200 200 7: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+1 0 1 1: Program timed out. Possible infinite loop
+
+1 1 0 1: Program timed out. Possible infinite loop
+
+1 1 1 0: Program timed out. Possible infinite loop
+
+1 1 1 1 0: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Program timed out. Possible infinite loop
+
+1 500 100 100 2: Program timed out. Possible infinite loop
+
+-- No Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 200 60 60 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 100 60 60 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 500 100 100 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 500 100 100 10: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 1000 250 250 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 100 150 150 10: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+-- No Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 200 60 60 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 100 60 60 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 500 100 100 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 500 100 100 10: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 1000 250 250 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 100 150 150 10: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+-- No Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 200 60 60 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 100 60 60 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 500 100 100 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 500 100 100 10: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 1000 250 250 2: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+1 100 150 150 10: Timestamp error: Non numerical
+	Simulation start: Usage: Death: Usage:
+
+-- No Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+1 1 1 1 0: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+1 100 60 60 2: Program timed out. Possible infinite loop
+
+-- No Death Tests --
+
+5 800 200 200 7: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+1 0 1 1: Program timed out. Possible infinite loop
+
+1 1 0 1: Program timed out. Possible infinite loop
+
+1 1 1 0: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+1 1 1 1 0: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 500 100 100 2: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 500 100 100 10: Program timed out. Possible infinite loop
+
+-- No Death Tests --
+
+10 500 100 100 50: Program timed out. Possible infinite loop
+
+-- Death Tests --
+
+2 100 60 60 5: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+1 1 0 1: Program timed out. Possible infinite loop
+
+1 1 1 0: Program timed out. Possible infinite loop
+
+1 1 1 1 0: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+1 1 1 1 0: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 2: Program timed out. Possible infinite loop
+
+1 100 60 60 2: Program timed out. Possible infinite loop
+
+-- No Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 2: Program timed out. Possible infinite loop
+
+1 100 60 60 2: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 100 60 60 2: Program timed out. Possible infinite loop
+
+1 500 100 100 2: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Program timed out. Possible infinite loop
+
+1 200 60 60 2: Program timed out. Possible infinite loop
+
+1 100 60 60 2: Program timed out. Possible infinite loop
+
+1 500 100 100 2: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 500 100 100 2: Program timed out. Possible infinite loop
+
+1 1000 250 250 2: Program timed out. Possible infinite loop
+
+1 100 150 150 10: Program timed out. Possible infinite loop
+
+-- No Death Tests --
+
+5 800 200 200 7: Program timed out. Possible infinite loop
+
+-- Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Program timed out. Possible infinite loop
+
+1 200 60 60 2: Program timed out. Possible infinite loop
+
+1 100 60 60 2: Program timed out. Possible infinite loop
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Timestamp error: Non numerical
+	Simulation start: Monitor Death: 200
+
+1 200 60 60 2: Timestamp error: Non numerical
+	Simulation start: Monitor Death: 201
+
+1 500 100 100 2: Timestamp error: Non numerical
+	Simulation start: Monitor Death: 500
+
+1 500 100 100 10: Timestamp error: Non numerical
+	Simulation start: Monitor Death: 501
+
+1 1000 250 250 2: Timestamp error: Non numerical
+	Simulation start: Monitor Death: 1000
+
+-- No Death Tests --
+
+5 800 200 200 7: Philosopher died
+	
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 100 Philo 2 sleep timestamp: 200 Philo 2 think timestamp: 301
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 300 60 60 15: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 61 Philo 2 sleep timestamp: 121 Philo 2 think timestamp: 182
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+2 800 700 110 2: Too many philosophers died
+
+10 199 100 100 10: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 610 200 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
+
+5 300 60 60 15: Philosopher died
+	
+
+-- Death Tests --
+
+2 100 60 60 5: Too many philosophers died
+
+3 61 60 60 5: Too many philosophers died
+
+4 190 100 100 5: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+2 100 60 60 5: Too many philosophers died
+
+2 100 100 100 5: Too many philosophers died
+
+2 800 700 110 2: Too many philosophers died
+
+4 190 100 100 5: Too many philosophers died
+
+10 199 100 100 10: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+4 410 200 200 10: Philosophers did not sleep for the correct time
+Expected: 200 Actual: 
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 800 200 200 7: Philosopher died
+	
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+2 100 60 60 5: Too many philosophers died
+
+4 190 100 100 5: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+2 100 100 100 5: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 610 200 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+2 100 60 60 5: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+2 100 60 60 5: Too many philosophers died
+
+4 190 100 100 5: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Timestamp error: Non numerical
+	Simulation start:  Death: 
+
+1 200 60 60 2: Timestamp error: Non numerical
+	Simulation start:  Death: 
+
+1 100 60 60 2: Timestamp error: Non numerical
+	Simulation start:  Death: 
+
+1 500 100 100 2: Timestamp error: Non numerical
+	Simulation start:  Death: 
+
+1 500 100 100 10: Timestamp error: Non numerical
+	Simulation start:  Death: 
+
+1 1000 250 250 2: Timestamp error: Non numerical
+	Simulation start:  Death: 
+
+1 100 150 150 10: Timestamp error: Non numerical
+	Simulation start:  Death: 
 
 -- No Death Tests --
 
 2 130 60 60 4: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
+2 300 100 100 4: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
+2 300 100 100 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
 3 200 65 65 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp: 1 Philo 1 sleep timestamp: 66 Philo 1 think timestamp: 131 Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
 3 310 100 200 5: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
@@ -218,165 +877,26 @@ Simulation start: 0 Death: 90
 4 410 200 200 10: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 130 Philo 2 sleep timestamp: 195 Philo 2 think timestamp: 260
-
-5 800 200 200 7: Philosopher died
-	
-
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Philosopher died
-	
-
-5 800 200 200 7: Philosopher died
-	
-
--- Death Tests --
-
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Timestamp error: Non numerical
+4 600 200 200 5: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
-5 610 200 200 5: Philosopher died
-	
-
-5 800 200 200 7: Philosopher died
-	
-
--- Death Tests --
-
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 65 Philo 2 sleep timestamp: 130 Philo 2 think timestamp: 195
-
 5 610 200 200 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
--- Death Tests --
+5 600 100 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
----- TRACE ENDS ----
+5 800 200 200 7: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
-============================================================
+5 300 60 60 15: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
------ TRACE BEGINS -----
+10 500 100 100 50: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Philosopher died
-	
-
--- Death Tests --
-
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Philosopher died
-	
-
-5 610 200 200 5: Timestamp error: Non numerical
-	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
-
-5 800 200 200 7: Philosopher died
-	
-
-5 300 60 60 15: Philosopher died
-	
-
--- Death Tests --
-
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-5 610 200 200 5: Philosopher died
-	
-
-5 300 60 60 15: Philosopher died
-	
-
--- Death Tests --
-
----- TRACE ENDS ----
-
-============================================================
-
------ TRACE BEGINS -----
-
--- Basic Error Tests --
-
--- One Philosopher Tests --
-
--- No Death Tests --
-
-3 200 65 65 5: Philosopher died
-	
-
-5 300 60 60 15: Philosopher died
-	
+11 900 150 90 20: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
 -- Death Tests --
 
@@ -401,8 +921,47 @@ Simulation start: 0 Death: 90
 5 90 60 60 3: Timestamp error: Non numerical
 	Time of death:  Last meal: 0
 
-10 199 100 100 10: Timestamp error: Non numerical
-	Time of death:  Last meal: 0
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 300 60 60 15: Philosopher died
+	
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+3 200 65 65 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 65 Philo 2 sleep timestamp: 130 Philo 2 think timestamp: 195
+
+5 800 200 200 7: Philosopher died
+	
+
+5 300 60 60 15: Philosopher died
+	
+
+-- Death Tests --
 
 ---- TRACE ENDS ----
 
@@ -419,9 +978,124 @@ Simulation start: 0 Death: 90
 3 200 65 65 5: Timestamp error: Non numerical
 	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
 
-11 900 150 90 20: Philosopher died
+5 610 200 200 5: Philosopher died
+	
+
+5 800 200 200 7: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 200 Philo 2 sleep timestamp: 400 Philo 2 think timestamp: 600
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+3 200 65 65 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 65 Philo 2 sleep timestamp: 130 Philo 2 think timestamp: 195
+
+5 800 200 200 7: Philosopher died
 	
 
 -- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+1 200 60 60 1: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 200
+
+1 200 60 60 2: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 200
+
+1 100 60 60 2: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 100
+
+1 500 100 100 2: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 500
+
+1 500 100 100 10: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 501
+
+1 1000 250 250 2: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 1000
+
+1 100 150 150 10: Timestamp error: Non numerical
+	Simulation start: Parsed: Death: 100
+
+-- No Death Tests --
+
+3 200 65 65 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 65 Philo 2 sleep timestamp: 130 Philo 2 think timestamp: 196
+
+5 800 200 200 7: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+3 200 65 65 5: Philosopher died
+	
+
+5 800 200 200 7: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp: 201 Philo 2 sleep timestamp: 401 Philo 2 think timestamp: 601
+
+5 300 60 60 15: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+3 200 65 65 5: Philosopher died
+	
+
+3 310 100 200 5: Philosophers did not sleep for the correct time
+Expected: 200 Actual: 
+
+5 610 200 200 5: Philosopher died
+	
+
+11 900 150 90 20: Philosophers did not eat for the correct time
+	Expected: 150 Actual: 
+
+-- Death Tests --
+
+4 190 100 100 5: Too many philosophers died
 
 ---- TRACE ENDS ----

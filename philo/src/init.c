@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 22:42:40 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 11:05:14 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 17:21:04 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,17 @@ bool	init_data(t_data *data)
 	data->philos = malloc(sizeof(t_philo) * data->num_philos);
 	data->forks = malloc(sizeof(t_fork) * data->num_philos);
 	if (!data->philos || !data->forks)
+	{
+		free(data->philos);
+		free(data->forks);
 		return (false);
+	}
 	memset(data->philos, 0, sizeof(*data->philos) * data->num_philos);
 	memset(data->forks, 0, sizeof(*data->forks) * data->num_philos);
 	data->start = timestamp();
+	pthread_mutex_lock(&data->stop_mutex);
 	data->stop = false;
+	pthread_mutex_unlock(&data->stop_mutex);
 	return (true);
 }
 
@@ -29,10 +35,12 @@ bool	init_mutexes(t_data *data)
 {
 	int	i;
 
-	/* 1) Initialize the print lock */
 	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
 		return (false);
-	/* 2) Initialize each fork mutex */
+	if (pthread_mutex_init(&data->waiter, NULL) != 0 )
+		return (false);
+	if (pthread_mutex_init(&data->stop_mutex, NULL) != 0)
+		return (false);
 	i = 0;
 	while (i < data->num_philos)
 	{
@@ -40,7 +48,6 @@ bool	init_mutexes(t_data *data)
 			return (false);
 		i++;
 	}
-	/* 3) Initialize each philosopher’s meal mutex */
 	i = 0;
 	while (i < data->num_philos)
 	{
@@ -78,8 +85,14 @@ bool	start_sim(t_data *data)
 	{
 		if (pthread_create(&data->philos[i].thread, NULL, philo_routine,
 				&data->philos[i]) != 0)
+		{
+			data->stop = true;
+			while (--i >= 0)
+				pthread_join(data->philos[i].thread, NULL);
+			pthread_join(data->monitor_thread, NULL);
 			return (false);
-		usleep(100);
+		}
+		usleep(500);
 		i++;
 	}
 	i = 0;
@@ -94,13 +107,26 @@ void	cleanup(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < data->num_philos)
+	if (data->forks)
 	{
-		pthread_mutex_destroy(&data->forks[i].lock);
-		pthread_mutex_destroy(&data->philos[i].meal_mutex);
-		i++;
+		while (i < data->num_philos)
+		{
+			pthread_mutex_destroy(&data->forks[i].lock);
+			i++;
+		}
+		free(data->forks);
+	}
+	i = 0;
+	if (data->philos)
+	{
+		while (i < data->num_philos)
+		{
+			pthread_mutex_destroy(&data->philos[i].meal_mutex);
+			i++;
+		}
+		free(data->philos);
 	}
 	pthread_mutex_destroy(&data->print_mutex);
-	free(data->philos);
-	free(data->forks);
+	pthread_mutex_destroy(&data->waiter);
+	pthread_mutex_destroy(&data->stop_mutex);
 }

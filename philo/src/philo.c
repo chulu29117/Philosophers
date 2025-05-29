@@ -5,31 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/20 21:43:08 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 17:28:30 by clu              ###   ########.fr       */
+/*   Created: 2025/05/29 20:06:37 by clu               #+#    #+#             */
+/*   Updated: 2025/05/29 23:40:20 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	main(int ac, char **av)
+int	main(int argc, char **argv)
 {
 	t_data	data;
-
-	if (!parse_args(ac, av, &data))
-	{
-		printf("%s", USAGE_1);
-		printf("%s", USAGE_2);
-		printf("%s", USAGE_3);
-		return (1);
-	}
-	if (!init_data(&data) || !init_mutexes(&data) || !init_philos(&data)
-		|| !start_sim(&data))
-	{
-		printf("Initialization failed\n");
-		cleanup(&data);
-		return (1);
-	}
-	cleanup(&data);
-	return (0);
+	
+	data.forks = NULL;
+	data.philos = NULL;
+	if (argc < 5 || argc > 6)
+		return (handle_err(NULL, USAGE, 0));
+	if (set_data(&data, argc, argv) < 0)
+		return (-1);
+	if (init_threads(&data) < 0)
+		return (-1);
+	cleanup(&data, 1);
+	return (0);	
 }

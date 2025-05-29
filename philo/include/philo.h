@@ -6,12 +6,12 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 17:00:15 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 00:38:52 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef philo_H
+# define philo_H
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -25,81 +25,92 @@
 /*
 ** Usage message for invalid arguments
 */
-# define USAGE_1 "Usage: ./philo number_of_philosophers" 
-# define USAGE_2 " time_to_die time_to_eat time_to_sleep"
-# define USAGE_3 " [number_of_times_each_philosopher_must_eat]\n"
+# define USAGE "Usage: ./philo number_of_philosophers time_to_die time_to_eat \
+time_to_sleep [number_of_times_each_philosopher_must_eat]\n"
 
 /* Status codes for print_status() */
-# define FORK_TAKEN 1
+# define FORK		1
 # define EATING 	2
 # define SLEEPING 	3
 # define THINKING 	4
 # define DIED 		5
 
-/* Sleep interval for ft_usleep */
-# define SLEEP_INTERVAL	1000
-
 /* Declaration */
 typedef struct s_data	t_data;
 typedef struct s_philo	t_philo;
-typedef struct s_fork	t_fork;
 
 /* Fork struct */
 typedef struct s_fork
 {
-	pthread_mutex_t	lock;
+	pthread_mutex_t	hold;
+	_Atomic bool	free;
 }	t_fork;
 
-/* Philosopher struct */
-typedef struct s_philo
-{
-	int				id;
-	int				meals;
-	long			last_meal;
-	pthread_t		thread;
-	pthread_mutex_t	meal_mutex;
-	t_data			*data;
-}	t_philo;
-
+/* philosopher struct */
 typedef struct s_data
 {
-	int				num_philos;
+	t_philo			*philos;
+	t_fork			*forks;
+	pthread_mutex_t	log_mutex;
+	int				N_philos;
+	int				full_count;
+	long			sim_start;
+	_Atomic bool	limit;
+	_Atomic bool	stop_sim;
+	_Atomic bool	died;
+}	t_data;
+
+typedef struct s_philo
+{
+	t_data			*data;
+	t_fork			*l_fork;
+	t_fork			*r_fork;
+	pthread_t		thread;
+	int				id;
+	int				meal_count;
+	int				meals_eaten;
 	long			t_to_die;
 	long			t_to_eat;
 	long			t_to_sleep;
-	int				max_meals;
-	bool			stop;
-	long			start;
-	pthread_t		monitor_thread;
-	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	stop_mutex;
-	pthread_mutex_t	waiter;
-	t_fork			*forks;
-	t_philo			*philos;
-}	t_data;
+	long			last_meal;
+	_Atomic bool	full;
+}	t_philo;
 
 /* Functions */
-/* parsing.c */
-int			ft_atoi(const char *str);
-bool		parse_args(int ac, char **av, t_data *data);
+/* parse.c */
+int		ft_atoi(const char *str);
+bool	validate(char *arg);
 
 /* init.c */
-bool		init_data(t_data *data);
-bool		init_mutexes(t_data *data);
-bool		init_philos(t_data *data);
-bool		start_sim(t_data *data);
-void		cleanup(t_data *data);
+int		init_threads(t_data *data);
+int		init_philos(t_philo *philos, int index, char **argv, t_data *data);
+int		init_data(t_data *data);
+int		set_philos(t_data *data, char **argv);
+int		set_data(t_data *data, int argc, char **argv);
+
+/* threads.c */
+void	ft_usleep(t_philo *philos, long duration);
+long	check_time(t_philo *philos, int	state);
+void	print_state(t_philo *philos, int state);
+void	start_meal(t_philo *philos);
+int		thread_err(t_data *data, char *msg, int count);
+
+/* threads_utils.c */
+void	single_philo(t_philo *philos);
+bool	try_l_fork(t_philo *philos);
+bool	try_r_fork(t_philo *philos);
+void	*monitor(void *arg);
+
+/* routines.c */
+void	eating(t_philo *philos);
+void	sleeping(t_philo *philos);
+void	thinking(t_philo *philos);
+void	waiting(t_philo *philos);
+void	*philo_routines(void *arg);
 
 /* utils.c */
-long		timestamp(void);
-void		ft_usleep(long ms, t_philo *philos);
-void		print_status(t_philo *philos, int start);
-int			time_checks(t_philo *philos, int type);
-
-/* routine.c */
-void		*philo_routine(void *arg);
-
-/* monitor.c */
-void		*monitor_routine(void *arg);
+long	timestamp(t_data *data);
+void	cleanup(t_data *data, int clean_mutex);
+int		handle_err(t_data *data, char *msg, int cleanup);
 
 #endif

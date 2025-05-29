@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/11 23:36:10 by clu               #+#    #+#              #
-#    Updated: 2025/05/26 13:16:03 by clu              ###   ########.fr        #
+#    Updated: 2025/05/29 00:39:28 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = philo
 
 # Comiler and Flags
 CC 		= cc
-CFLAGS 	= -Wall -Werror -Wextra
+CFLAGS 	= -Wall -Werror -Wextra -g
 
 # Directories
 SRC_DIR = ./src
@@ -29,7 +29,7 @@ HEADERS_DEP = include/philo.h
 
 # Source files and object files
 SRC = $(SRC_DIR)philo.c $(SRC_DIR)init.c $(SRC_DIR)philo_routine.c \
-		$(SRC_DIR)monitor.c $(SRC_DIR)utils.c
+		$(SRC_DIR)monitor.c $(SRC_DIR)utils.c $(SRC_DIR)parsing.c
 OBJ = $(SRC:$(SRC_DIR)%=$(OBJ_DIR)/%)
 OBJ := $(OBJ:.c=.o)
 

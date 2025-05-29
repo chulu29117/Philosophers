@@ -6,178 +6,95 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:23:44 by clu               #+#    #+#             */
-/*   Updated: 2025/05/28 02:54:36 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 00:32:48 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 /*
-** Attempt to take both forks in a deadlock-preventing order.
-** Ordering by lowest‐index first.
+** Handle the single-philosopher special case: take one fork and wait to die.
 */
-bool take_forks(t_philo *philo)
+static void	single_philo(t_philo *philos)
 {
-	t_data *data;
-	int		first;
-	int		second;
-	int		tmp;
+	pthread_mutex_lock(&philos->data->forks[philos->id - 1].lock);
+	print_status(philos, FORK_TAKEN);
+	ft_usleep(philos->data->t_to_die, philos->data);
+	print_status(philos, DIED);
+	pthread_mutex_unlock(&philos->data->forks[philos->id - 1].lock);
+}
 
-	data = philo->data;
-	first = philo->left_fork;
-	second = philo->right_fork;
-	if (first > second)
+/*
+** Determine fork order to avoid deadlock, then take them.
+*/
+static void	pick_forks(t_philo *philos, int *first, int *second)
+{
+	int	left;
+	int	right;
+
+	left = philos->id - 1;
+	right = philos->id % philos->data->num_philos;
+	if (left < right)
 	{
-		tmp    = first;
-		first  = second;
-		second = tmp;
+		*first = left;
+		*second = right;
 	}
-	pthread_mutex_lock(&data->forks[first]);
-	print_status(philo, FORK_TAKEN);
-	pthread_mutex_lock(&data->forks[second]);
-	print_status(philo, FORK_TAKEN);
-	return (true);
-}
-
-/*
-** Philosopher eats: updates last_meal and increments times_eaten.
-*/
-bool	eat(t_philo *philo)
-{
-	t_data *data;
-	
-	data = philo->data;
-	pthread_mutex_lock(&philo->meal_mutex);
-	philo->last_meal = get_time();
-	print_status(philo, EATING);
-	philo->times_eaten++;
-	pthread_mutex_unlock(&philo->meal_mutex);
-	ft_usleep(data->time_to_eat);
-	if (data->sim_stopped)
-		return (false);
-	return (true);
-}
-
-/*
-** Release both forks.
-*/
-void	put_forks(t_philo *philo)
-{
-	t_data *data;
-	
-	data = philo->data;
-	pthread_mutex_unlock(&data->forks[philo->left_fork]);
-	pthread_mutex_unlock(&data->forks[philo->right_fork]);
-}
-
-/*
-** Philosopher sleeps and then thinks.
-*/
-void	sleep_think(t_philo *philo)
-{
-	t_data *data;
-
-	data = philo->data;
-	print_status(philo, SLEEPING);
-	ft_usleep(data->time_to_sleep);
-	print_status(philo, THINKING);
-}
-
-/*
-** Special case handling for a single philosopher
-*/
-void	one_philo(t_philo *philo)
-{
-	t_data *data;
-
-	data = philo->data;
-	// single philosopher takes left fork, simulates eating and sleeping
-	pthread_mutex_lock(&data->forks[philo->left_fork]);
-	print_status(philo, FORK_TAKEN);
-	// starve until time_to_die
-	ft_usleep(data->time_to_die);
-	pthread_mutex_lock(&data->print_mutex);
-	if (!data->sim_stopped)
+	else
 	{
-		// print death status
-		printf("%lld %d died\n", get_time() - data->start_time, philo->id);
-		data->sim_stopped = true;
+		*first = right;
+		*second = left;
 	}
-	pthread_mutex_unlock(&data->print_mutex);
-	pthread_mutex_unlock(&data->forks[philo->left_fork]);
-	stop_sim(data);
+	pthread_mutex_lock(&philos->data->forks[*first].lock);
+	print_status(philos, FORK_TAKEN);
+	pthread_mutex_lock(&philos->data->forks[*second].lock);
+	print_status(philos, FORK_TAKEN);
 }
 
 /*
-** One full life cycle: wait for slot, take forks, eat, release slot,
-** then put forks, sleep, think.
+** Eat, then release forks, then sleep and think.
 */
-bool	philo_cycle(t_philo *philo)
+static void	eat_sleep_think(t_philo *philos, int first, int second)
 {
-	/* 1) Try to acquire forks.  If we fail immediately, back off. */
-	if (!take_forks(philo))
-		return (true);
-	/* 2) Eat: update last meal and increment times eaten */
-	if (!eat(philo))
-	{
-		put_forks(philo);
-		return (false);
-	}
-	/* 3) Release forks */
-	put_forks(philo);
-	/* 4) Sleep and think */
-	sleep_think(philo);
-	return (true);
+	/* eat */
+	pthread_mutex_lock(&philos->meal_mutex);
+	philos->last_meal = timestamp();
+	philos->meals++;
+	print_status(philos, EATING);
+	pthread_mutex_unlock(&philos->meal_mutex);
+
+	ft_usleep(philos->data->t_to_eat, philos->data);
+	pthread_mutex_unlock(&philos->data->forks[first].lock);
+	pthread_mutex_unlock(&philos->data->forks[second].lock);
+
+	/* sleep and think */
+	print_status(philos, SLEEPING);
+	ft_usleep(philos->data->t_to_sleep, philos->data);
+	print_status(philos, THINKING);
 }
 
 /*
-** Helper to check the stop flag under mutex.
-*/
-bool	check_stop(t_data *data)
-{
-	bool	stopped;
-
-	pthread_mutex_lock(&data->print_mutex);
-	stopped = data->sim_stopped;
-	pthread_mutex_unlock(&data->print_mutex);
-	return (stopped);
-}
-
-/*
-** Philosopher thread routine: life cycle until simulation stops
+** Main philosopher routine: loop until stop or meal limit reached.
 */
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
-	t_data	*data;
+	t_philo	*philos;
+	int		first;
+	int		second;
 
-	philo = (t_philo *)arg;
-	data = philo->data;
-	/* Handle the single-philosopher case immediately, before any sleeps */
-	if (data->num_philos == 1)
+	philos = (t_philo *)arg;
+	if (philos->data->num_philos == 1)
 	{
-		one_philo(philo);
+		single_philo(philos);
 		return (NULL);
 	}
-	/* Stagger odd IDs by half an eating cycle to reduce contention */
-	if (philo->id % 2 == 0)
-		ft_usleep(data->time_to_eat);
-	/* Main loop: cycle until death or (optional) meal limit */
-	while (true)
+	if (philos->id % 2 == 0)
+		usleep(SLEEP_INTERVAL);
+	while (!philos->data->stop)
 	{
-		if (check_stop(data))
-			break ;
-		pthread_mutex_lock(&data->philo->meal_mutex);
-		if (data->sim_stopped)
-		{
-			pthread_mutex_unlock(&data->philo->meal_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&data->philo->meal_mutex);
-		if (!philo_cycle(philo))
-			break ;
-		/* Exit once this philosopher reached eat count, if set */
-		if (data->sim_duration && philo->times_eaten >= data->num_times_to_eat)
+		pick_forks(philos, &first, &second);
+		eat_sleep_think(philos, first, second);
+		if (philos->data->max_meals > 0
+			&& philos->meals >= philos->data->max_meals)
 			break ;
 	}
 	return (NULL);

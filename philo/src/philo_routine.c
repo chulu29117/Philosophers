@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:23:44 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 00:32:48 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 11:05:27 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	single_philo(t_philo *philos)
 {
 	pthread_mutex_lock(&philos->data->forks[philos->id - 1].lock);
 	print_status(philos, FORK_TAKEN);
-	ft_usleep(philos->data->t_to_die, philos->data);
+	ft_usleep(philos->data->t_to_die, philos);
 	print_status(philos, DIED);
 	pthread_mutex_unlock(&philos->data->forks[philos->id - 1].lock);
 }
@@ -27,14 +27,14 @@ static void	single_philo(t_philo *philos)
 /*
 ** Determine fork order to avoid deadlock, then take them.
 */
-static void	pick_forks(t_philo *philos, int *first, int *second)
+static bool	pick_forks(t_philo *philos, int *first, int *second)
 {
 	int	left;
 	int	right;
 
 	left = philos->id - 1;
 	right = philos->id % philos->data->num_philos;
-	if (left < right)
+	if (philos->id % 2 == 0)
 	{
 		*first = left;
 		*second = right;
@@ -45,9 +45,10 @@ static void	pick_forks(t_philo *philos, int *first, int *second)
 		*second = left;
 	}
 	pthread_mutex_lock(&philos->data->forks[*first].lock);
-	print_status(philos, FORK_TAKEN);
+	print_status(philos, FORK_TAKEN);	
 	pthread_mutex_lock(&philos->data->forks[*second].lock);
 	print_status(philos, FORK_TAKEN);
+	return (true);
 }
 
 /*
@@ -62,13 +63,14 @@ static void	eat_sleep_think(t_philo *philos, int first, int second)
 	print_status(philos, EATING);
 	pthread_mutex_unlock(&philos->meal_mutex);
 
-	ft_usleep(philos->data->t_to_eat, philos->data);
+	ft_usleep(philos->data->t_to_eat, philos);
+
 	pthread_mutex_unlock(&philos->data->forks[first].lock);
 	pthread_mutex_unlock(&philos->data->forks[second].lock);
-
+	
 	/* sleep and think */
 	print_status(philos, SLEEPING);
-	ft_usleep(philos->data->t_to_sleep, philos->data);
+	ft_usleep(philos->data->t_to_sleep, philos);
 	print_status(philos, THINKING);
 }
 
@@ -91,7 +93,8 @@ void	*philo_routine(void *arg)
 		usleep(SLEEP_INTERVAL);
 	while (!philos->data->stop)
 	{
-		pick_forks(philos, &first, &second);
+		if (!pick_forks(philos, &first, &second))
+			break ;
 		eat_sleep_think(philos, first, second);
 		if (philos->data->max_meals > 0
 			&& philos->meals >= philos->data->max_meals)

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 00:34:42 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 11:04:50 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sys/time.h>
 # include <limits.h>
 # include <stdbool.h>
+# include <stdatomic.h>
 
 /*
 ** Usage message for invalid arguments
@@ -48,7 +49,7 @@ typedef struct s_fork	t_fork;
 typedef struct s_fork
 {
 	pthread_mutex_t	lock;
-	bool			in_use;
+	// _Atomic bool	in_use;
 }	t_fork;
 
 /* Philosopher struct */
@@ -91,8 +92,9 @@ void		cleanup(t_data *data);
 
 /* utils.c */
 long		timestamp(void);
-void		ft_usleep(long ms, t_data *data);
+void		ft_usleep(long ms, t_philo *philos);
 void		print_status(t_philo *philos, int start);
+int			time_checks(t_philo *philos, int type);
 
 /* routine.c */
 void		*philo_routine(void *arg);

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 22:42:40 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 00:45:11 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/29 11:05:14 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ bool	init_mutexes(t_data *data)
 	{
 		if (pthread_mutex_init(&data->forks[i].lock, NULL) != 0)
 			return (false);
-		data->forks[i].in_use = false;
 		i++;
 	}
 	/* 3) Initialize each philosopher’s meal mutex */

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 12:22:26 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 13:01:55 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@
 time_to_sleep [number_of_times_each_philosopher_must_eat]\n"
 
 /* Status codes for print_status() */
-# define FORK		1
-# define EATING 	2
-# define SLEEPING 	3
-# define THINKING 	4
-# define DIED 		5
+# define FORK	1
+# define EATING 2
+# define SLEEP 	3
+# define THINK 	4
+# define DIED 	5
 
 /* Declaration */
-typedef struct s_data	t_table;
+typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
 
 /* Fork struct */
@@ -89,10 +89,9 @@ int		set_table(t_table *table, int argc, char **argv);
 
 /* threads.c */
 void	ft_usleep(t_philo *philos, long duration);
-long	check_time(t_philo *philos);
-bool	is_philo_dead(t_philo *philos);
+long	check_death(t_philo *philos, int type);
 void	print_state(t_philo *philos, int state);
-void	start_meal(t_philo *philos);
+void	start_eating(t_philo *philos);
 int		thread_err(t_table *table, char *msg, int count);
 
 /* threads_utils.c */
@@ -105,7 +104,7 @@ void	*monitor(void *arg);
 void	eating(t_philo *philos);
 void	sleeping(t_philo *philos);
 void	thinking(t_philo *philos);
-void	waiting(t_philo *philos);
+void	wait_start(t_philo *philos);
 void	*philo_routines(void *arg);
 
 /* utils.c */

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:29:14 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 12:26:22 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 12:34:24 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	cleanup(t_table *table, int clean_mutex)
 			free(table->forks);
 			table->forks = NULL;
 		}
-		if (cleann_mutex)
+		if (clean_mutex)
 			pthread_mutex_destroy(&table->print_mutex);
 	}
 }

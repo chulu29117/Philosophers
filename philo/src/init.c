@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 12:22:21 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 13:08:27 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,25 +68,6 @@ int	init_table(t_table *table)
 	return (0);
 }
 
-int	init_threads(t_table *table)
-{
-	int			i;
-
-	i = -1;
-	table->philos = NULL;
-	table->forks = NULL;
-	if (init_table(table) < 0)
-		return (-1);
-	table->philos = malloc(table->n_philos * sizeof(t_philo));
-	if (!table->philos)
-		return (handle_err(table, "Failed to malloc philos", 1));
-	while (++i < table->n_philos)
-	{
-		if (init_philos(&table->philos[i], i, NULL, table) < 0)
-			return (-1);
-	}
-	return (0);
-}
 int	set_table(t_table *table, int argc, char **argv)
 {
 	int	i;
@@ -101,7 +82,7 @@ int	set_table(t_table *table, int argc, char **argv)
 	if (table->n_philos < 0 || table->n_philos > 1000)
 		return (handle_err(table, "Error: bad arguments", 0));
 	table->stop = false;
-	table->n_philo_full = 0;
+	table->n_philos_full = 0;
 	if (argc == 6)
 		table->limit = true;
 	else
@@ -118,7 +99,7 @@ int	set_philos(t_table *table, char **argv)
 	i = -1;
 	table->philos = NULL;
 	table->forks = NULL;
-	if (init_data(table) < 0)
+	if (init_table(table) < 0)
 		return (-1);
 	table->philos = malloc(table->n_philos * sizeof(t_philo));
 	if (!table->philos)

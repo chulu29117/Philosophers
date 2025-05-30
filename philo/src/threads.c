@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:47:50 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:04:52 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 13:25:53 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ long check_death(t_philo *philos, int type)
 		{
 			philos->table->stop = true;
 			print_state(philos, DIED);
-			return (true);
+			return (1);
 		}
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:41:15 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:03:51 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 13:33:23 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@ void	eating(t_philo *philos)
 {
 	if (philos->table->stop == true)
 		return ;
-	while (!philos->l_fork->free)
+	while (philos->l_fork->free == false)
 		check_death(philos, SLEEP);
 	pthread_mutex_lock(&philos->l_fork->hold);
-	if (try_l_fork(philos) == true)
+	if (try_l_fork(philos) == 1)
 		return ;
 	print_state(philos, FORK);
 	if (philos->table->n_philos == 1)
 		return (single_philo(philos));
-	while (!philos->r_fork->free)
+	while (philos->r_fork->free == false)
 		check_death(philos, SLEEP);
 	pthread_mutex_lock(&philos->r_fork->hold);
 	if (try_r_fork(philos) == true)
 		return ;
 	start_eating(philos);
-}	
+}
 
 void	sleeping(t_philo *philos)
 {
@@ -62,8 +62,8 @@ void	*philo_routines(void *arg)
 	int		i;
 
 	philos = (t_philo *)arg;
-	i = -1;
-	if (philos->table->n_philos % 2 != 0)
+	i = 0;
+	if (philos->id % 2 != 0)
 		wait_start(philos);
 	else
 		thinking(philos);
@@ -71,9 +71,9 @@ void	*philo_routines(void *arg)
 	{
 		if (philos->table->stop == true)
 			break ;
-		if (check_death(philos, SLEEP) == true)
+		if (check_death(philos, SLEEP) == 1)
 			break ;
-		if (philos->eat_count != -1 && i++ == philos->eat_count)
+		if (philos->eat_count != -2 && i++ == philos->eat_count)
 			break ;
 		eating(philos);
 		if (philos->table->n_philos != 1)

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:09:46 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:14:00 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 13:27:58 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ bool	try_l_fork(t_philo *philos)
 	{
 		philos->l_fork->free = true;
 		pthread_mutex_unlock(&philos->l_fork->hold);
-		return (false);
+		return (true);
 	}
-	return (true);
+	return (false);
 }
 
 bool	try_r_fork(t_philo *philos)
@@ -40,9 +40,9 @@ bool	try_r_fork(t_philo *philos)
 		pthread_mutex_unlock(&philos->l_fork->hold);
 		philos->r_fork->free = true;
 		pthread_mutex_unlock(&philos->r_fork->hold);
-		return (false);
+		return (true);
 	}
-	return (true);
+	return (false);
 }
 
 int	init_threads(t_table *table)

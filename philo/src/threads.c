@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:47:50 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 09:52:56 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 10:23:00 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,59 +19,56 @@ void	ft_usleep(t_philo *philos, long duration)
 	start = timestamp(philos->data);
 	while (!philos->data->stop_sim
 		&& (timestamp(philos->data) - start) < duration)
-	{
 		usleep(500);
-		check_time(philos, SLEEPING);
-	}
 }
 
-long	check_time(t_philo *philos, int state)
+long check_time(t_philo *philos)
 {
-	long	result;
-
-	pthread_mutex_lock(&philos->meal_mutex);
-	if (state == EATING)
-		result = timestamp(philos->data) - philos->data->sim_start;
-	else if (state == SLEEPING)
-	{
-		if (timestamp(philos->data) - philos->last_meal >= philos->t_to_die)
-		{
-			philos->data->stop_sim = true;
-			pthread_mutex_unlock(&philos->meal_mutex);
-			print_state(philos, DIED);
-			return (1);
-		}
-		result = 0;
-	}
-	else
-		result = 0;
-	pthread_mutex_unlock(&philos->meal_mutex);
-	return (result);
+    long result;
+    pthread_mutex_lock(&philos->meal_mutex); // Lock around last_meal access
+    result = timestamp(philos->data) - philos->data->sim_start;
+    pthread_mutex_unlock(&philos->meal_mutex);
+    return (result);
 }
 
-void	print_state(t_philo *philos, int state)
+// New function for checking death
+bool is_philo_dead(t_philo *philos)
 {
-	if (philos->data->stop_sim && state != DIED)
-		return ;
-	pthread_mutex_lock(&philos->data->log_mutex);
-	if (state == FORK && !philos->data->stop_sim)
-		printf("%ld %d has taken a fork\n",
-			check_time(philos, 2), philos->id + 1);
-	else if (state == EATING && !philos->data->stop_sim)
-		printf("%ld %d is eating\n",
-			check_time(philos, 2), philos->id + 1);
-	else if (state == SLEEPING && !philos->data->stop_sim)
-		printf("%ld %d is sleeping\n",
-			check_time(philos, 2), philos->id + 1);
-	else if (state == THINKING && !philos->data->stop_sim)
-		printf("%ld %d is thinking\n",
-			check_time(philos, 2), philos->id + 1);
-	else if (state == DIED && !philos->data->died)
-	{
-		philos->data->died = true;
-		printf("%ld %d died\n", check_time(philos, 2), philos->id + 1);
-	}
-	pthread_mutex_unlock(&philos->data->log_mutex);
+    pthread_mutex_lock(&philos->meal_mutex);
+    if (timestamp(philos->data) - philos->last_meal >= philos->t_to_die)
+    {
+        pthread_mutex_unlock(&philos->meal_mutex);
+        return (true);
+    }
+    pthread_mutex_unlock(&philos->meal_mutex);
+    return (false);
+}
+
+void print_state(t_philo *philos, int state)
+{
+    pthread_mutex_lock(&philos->data->log_mutex);
+    if (philos->data->stop_sim && state != DIED)
+    {
+        pthread_mutex_unlock(&philos->data->log_mutex);
+        return ;
+    }
+    long current_time = timestamp(philos->data) - philos->data->sim_start; // Get time once
+
+    if (state == FORK && !philos->data->stop_sim)
+        printf("%ld %d has taken a fork\n", current_time, philos->id + 1);
+    else if (state == EATING && !philos->data->stop_sim)
+        printf("%ld %d is eating\n", current_time, philos->id + 1);
+    else if (state == SLEEPING && !philos->data->stop_sim)
+        printf("%ld %d is sleeping\n", current_time, philos->id + 1);
+    else if (state == THINKING && !philos->data->stop_sim)
+        printf("%ld %d is thinking\n", current_time, philos->id + 1);
+    else if (state == DIED && !philos->data->died)
+    {
+        philos->data->died = true;
+		philos->data->stop_sim = true;
+        printf("%ld %d died\n", current_time, philos->id + 1);
+    }
+    pthread_mutex_unlock(&philos->data->log_mutex);
 }
 
 void	start_meal(t_philo *philos)

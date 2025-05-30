@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 09:47:01 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 10:15:01 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int		set_data(t_data *data, int argc, char **argv);
 
 /* threads.c */
 void	ft_usleep(t_philo *philos, long duration);
-long	check_time(t_philo *philos, int	state);
+long	check_time(t_philo *philos);
+bool	is_philo_dead(t_philo *philos);
 void	print_state(t_philo *philos, int state);
 void	start_meal(t_philo *philos);
 int		thread_err(t_data *data, char *msg, int count);

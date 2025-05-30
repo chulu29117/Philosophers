@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:47:50 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 00:38:13 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 09:52:56 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,33 @@ void	ft_usleep(t_philo *philos, long duration)
 	while (!philos->data->stop_sim
 		&& (timestamp(philos->data) - start) < duration)
 	{
-		usleep(1000);
+		usleep(500);
 		check_time(philos, SLEEPING);
 	}
 }
 
-long	check_time(t_philo *philos, int	state)
+long	check_time(t_philo *philos, int state)
 {
+	long	result;
+
+	pthread_mutex_lock(&philos->meal_mutex);
 	if (state == EATING)
-		return (timestamp(philos->data) - philos->data->sim_start);
+		result = timestamp(philos->data) - philos->data->sim_start;
 	else if (state == SLEEPING)
 	{
 		if (timestamp(philos->data) - philos->last_meal >= philos->t_to_die)
 		{
 			philos->data->stop_sim = true;
+			pthread_mutex_unlock(&philos->meal_mutex);
 			print_state(philos, DIED);
 			return (1);
 		}
+		result = 0;
 	}
-	return (0);
+	else
+		result = 0;
+	pthread_mutex_unlock(&philos->meal_mutex);
+	return (result);
 }
 
 void	print_state(t_philo *philos, int state)
@@ -68,27 +76,13 @@ void	print_state(t_philo *philos, int state)
 
 void	start_meal(t_philo *philos)
 {
-    print_state(philos, EATING);
-    philos->last_meal = timestamp(philos->data);
-    ft_usleep(philos, philos->t_to_eat);
-    
-    // Track meals here where we know eating actually happened
-    if (philos->data->limit && philos->meal_count > 0)
-    {
-        pthread_mutex_lock(&philos->data->log_mutex);
-        philos->meals_eaten++;
-        if (philos->meals_eaten >= philos->meal_count && !philos->full)
-        {
-            philos->full = true;
-            philos->data->full_count++;
-        }
-        pthread_mutex_unlock(&philos->data->log_mutex);
-    }
-    
-    philos->r_fork->free = true;
-    philos->l_fork->free = true;
-    pthread_mutex_unlock(&philos->r_fork->hold);
-    pthread_mutex_unlock(&philos->l_fork->hold);
+	print_state(philos, EATING);
+	pthread_mutex_lock(&philos->meal_mutex);
+	philos->last_meal = timestamp(philos->data);
+	pthread_mutex_unlock(&philos->meal_mutex);
+	ft_usleep(philos, philos->t_to_eat);
+	pthread_mutex_unlock(&philos->r_fork->hold);
+	pthread_mutex_unlock(&philos->l_fork->hold);
 }
 
 int	thread_err(t_data *data, char *msg, int count)

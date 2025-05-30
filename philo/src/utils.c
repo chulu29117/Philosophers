@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:29:14 by clu               #+#    #+#             */
-/*   Updated: 2025/05/29 23:09:00 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 09:55:44 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@ void	cleanup(t_data *data, int clean_mutex)
 	if (data)
 	{
 		if (data->philos)
+		{
+			while (++i < data->N_philos)
+				pthread_mutex_destroy(&data->philos[i].meal_mutex);
 			free(data->philos);
+		}
+		i = -1;
 		if (data->forks)
 		{
 			while (++i < data->N_philos)
@@ -40,7 +45,10 @@ void	cleanup(t_data *data, int clean_mutex)
 			free(data->forks);
 		}
 		if (clean_mutex)
+		{
 			pthread_mutex_destroy(&data->log_mutex);
+			pthread_mutex_destroy(&data->count_mutex);
+		}
 	}
 }
 

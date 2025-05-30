@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:41:15 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 00:36:38 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 10:03:29 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,38 +28,35 @@ static void	set_forks(t_philo *philos, t_fork **first, t_fork **second)
 
 void	eating(t_philo *philos)
 {
-    t_fork	*first_fork;
-    t_fork	*second_fork;
+	t_fork	*first_fork;
+	t_fork	*second_fork;
 
-    if (philos->data->stop_sim || philos->full)
-        return ;
-    set_forks(philos, &first_fork, &second_fork);
-    
-    // Lock first fork
-    pthread_mutex_lock(&first_fork->hold);
-    if (philos->data->stop_sim)
-    {
-        pthread_mutex_unlock(&first_fork->hold);
-        return ;
-    }
-    first_fork->free = false;
-    print_state(philos, FORK);
-    
-    if (philos->data->N_philos == 1)
-        return (single_philo(philos));
-        
-    // Lock second fork
-    pthread_mutex_lock(&second_fork->hold);
-    if (philos->data->stop_sim)
-    {
-        first_fork->free = true;
-        pthread_mutex_unlock(&first_fork->hold);
-        pthread_mutex_unlock(&second_fork->hold);
-        return ;
-    }
-    second_fork->free = false;
-    print_state(philos, FORK);
-    start_meal(philos);
+	if (philos->data->stop_sim || philos->full)
+		return ;
+	set_forks(philos, &first_fork, &second_fork);
+	pthread_mutex_lock(&first_fork->hold);
+	if (philos->data->stop_sim)
+	{
+		pthread_mutex_unlock(&first_fork->hold);
+		return ;
+	}
+	print_state(philos, FORK);
+	if (philos->data->N_philos == 1)
+		return (single_philo(philos));
+	if (check_time(philos, SLEEPING))
+	{
+		pthread_mutex_unlock(&first_fork->hold);
+		return ;
+	}
+	pthread_mutex_lock(&second_fork->hold);
+	if (philos->data->stop_sim)
+	{
+		pthread_mutex_unlock(&first_fork->hold);
+		pthread_mutex_unlock(&second_fork->hold);
+		return ;
+	}
+	print_state(philos, FORK);
+	start_meal(philos);
 }
 
 void	sleeping(t_philo *philos)
@@ -75,7 +72,7 @@ void	thinking(t_philo *philos)
 	if (philos->data->stop_sim)
 		return ;
 	print_state(philos, THINKING);
-	usleep(1000);
+	usleep(500);
 }
 
 void	waiting(t_philo *philos)
@@ -83,28 +80,37 @@ void	waiting(t_philo *philos)
 	if (philos->data->stop_sim)
 		return;
 	print_state(philos, THINKING);
-	ft_usleep(philos, 10);
+	ft_usleep(philos, 40);
 }
 
 void	*philo_routines(void *arg)
 {
-    t_philo	*philos;
-    
-    philos = (t_philo *)arg;
-    if (philos->id % 2 != 0)
-        waiting(philos);
-    else
-        thinking(philos);
-    while (!philos->data->stop_sim && !philos->full)
-    {
-        if (check_time(philos, 3))
-            break ;
-        eating(philos);
-        if (!philos->full)
-        {
-            sleeping(philos);
-            thinking(philos);
-        }
-    }
-    return (NULL);
+	t_philo	*philos;
+	int		meals;
+
+	philos = (t_philo *)arg;
+	meals = 0;
+	if (philos->id % 2 != 0)
+		waiting(philos);
+	else
+		thinking(philos);
+	while (!philos->data->stop_sim)
+	{
+		if (check_time(philos, SLEEPING))
+			break ;
+		eating(philos);
+		if (philos->meal_count != -1 && ++meals == philos->meal_count)
+		{
+            pthread_mutex_lock(&philos->data->count_mutex);
+			philos->full = true;
+			philos->data->full_count++;
+			if (philos->data->full_count >= philos->data->N_philos)
+				philos->data->stop_sim = true;
+			pthread_mutex_unlock(&philos->data->count_mutex);
+			break ;
+		}
+		sleeping(philos);
+		thinking(philos);
+	}
+	return (NULL);
 }

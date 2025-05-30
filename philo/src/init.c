@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 00:54:58 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 09:49:11 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,26 @@ int	init_philos(t_philo *philos, int index, char **argv, t_data *data)
 		|| philos->t_to_sleep < 0 || (argc == 6 && philos->meal_count <= 0))
 		return (handle_err(data, "Error: bad arguments", 1));
 	philos->full = false;
-	philos->meals_eaten = 0;
 	philos->thread = 0;
 	philos->data = data;
 	philos->id = index;
 	philos->l_fork = &data->forks[index];
 	philos->r_fork = &data->forks[(index + 1) % data->N_philos];
 	philos->last_meal = data->sim_start;
+	if (pthread_mutex_init(&philos->meal_mutex, NULL) != 0)
+		return (handle_err(data, "Failed to init meal_mutex", 1));
 	return (0);
 }
 
 int	init_data(t_data *data)
 {
 	int	i;
-	
+
 	i = -1;
 	if (pthread_mutex_init(&data->log_mutex, NULL) != 0)
 		return (handle_err(data, "Failed to init log_mutex", 0));
+	if (pthread_mutex_init(&data->count_mutex, NULL) != 0)
+		return (handle_err(data, "Failed to init count_mutex", 0));
 	data->forks = malloc(data->N_philos * sizeof(t_fork));
 	if (!data->forks)
 		return (handle_err(data, "Failed to malloc forks", 1));
@@ -85,10 +88,9 @@ int	init_data(t_data *data)
 		if (pthread_mutex_init(&data->forks[i].hold, NULL) != 0)
 		{
 			while (i--)
-			pthread_mutex_destroy(&data->forks[i].hold);
+				pthread_mutex_destroy(&data->forks[i].hold);
 			return (handle_err(data, "Failed to init forks", 1));
 		}
-		data->forks[i].free = true;
 	}
 	data->died = false;
 	data->sim_start = timestamp(data);
@@ -100,7 +102,7 @@ int	init_data(t_data *data)
 int	set_philos(t_data *data, char **argv)
 {
 	int	i;
-	
+
 	i = -1;
 	data->philos = NULL;
 	data->forks = NULL;

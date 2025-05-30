@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 00:38:52 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 09:47:01 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_data
 	t_philo			*philos;
 	t_fork			*forks;
 	pthread_mutex_t	log_mutex;
+	pthread_mutex_t	count_mutex;
 	int				N_philos;
 	int				full_count;
 	long			sim_start;
@@ -68,12 +69,12 @@ typedef struct s_philo
 	pthread_t		thread;
 	int				id;
 	int				meal_count;
-	int				meals_eaten;
 	long			t_to_die;
 	long			t_to_eat;
 	long			t_to_sleep;
 	long			last_meal;
 	_Atomic bool	full;
+	pthread_mutex_t	meal_mutex;
 }	t_philo;
 
 /* Functions */

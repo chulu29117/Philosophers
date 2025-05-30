@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 10:15:01 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 12:22:26 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ time_to_sleep [number_of_times_each_philosopher_must_eat]\n"
 # define DIED 		5
 
 /* Declaration */
-typedef struct s_data	t_data;
+typedef struct s_data	t_table;
 typedef struct s_philo	t_philo;
 
 /* Fork struct */
@@ -47,34 +47,32 @@ typedef struct s_fork
 }	t_fork;
 
 /* philosopher struct */
-typedef struct s_data
+typedef struct s_table
 {
 	t_philo			*philos;
 	t_fork			*forks;
-	pthread_mutex_t	log_mutex;
-	pthread_mutex_t	count_mutex;
-	int				N_philos;
-	int				full_count;
-	long			sim_start;
+	pthread_mutex_t	print_mutex;
 	_Atomic bool	limit;
-	_Atomic bool	stop_sim;
+	_Atomic bool	stop;
 	_Atomic bool	died;
-}	t_data;
+	int				n_philos;
+	int				n_philos_full;
+	long			start_time;
+}	t_table;
 
 typedef struct s_philo
 {
-	t_data			*data;
+	t_table			*table;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
 	pthread_t		thread;
+	_Atomic bool	full;
 	int				id;
-	int				meal_count;
+	int				eat_count;
 	long			t_to_die;
 	long			t_to_eat;
 	long			t_to_sleep;
-	long			last_meal;
-	_Atomic bool	full;
-	pthread_mutex_t	meal_mutex;
+	long			last_ate;
 }	t_philo;
 
 /* Functions */
@@ -83,11 +81,11 @@ int		ft_atoi(const char *str);
 bool	validate(char *arg);
 
 /* init.c */
-int		init_threads(t_data *data);
-int		init_philos(t_philo *philos, int index, char **argv, t_data *data);
-int		init_data(t_data *data);
-int		set_philos(t_data *data, char **argv);
-int		set_data(t_data *data, int argc, char **argv);
+int		init_threads(t_table *table);
+int		init_philos(t_philo *philos, int index, char **argv, t_table *table);
+int		init_table(t_table *table);
+int		set_philos(t_table *table, char **argv);
+int		set_table(t_table *table, int argc, char **argv);
 
 /* threads.c */
 void	ft_usleep(t_philo *philos, long duration);
@@ -95,7 +93,7 @@ long	check_time(t_philo *philos);
 bool	is_philo_dead(t_philo *philos);
 void	print_state(t_philo *philos, int state);
 void	start_meal(t_philo *philos);
-int		thread_err(t_data *data, char *msg, int count);
+int		thread_err(t_table *table, char *msg, int count);
 
 /* threads_utils.c */
 void	single_philo(t_philo *philos);
@@ -111,8 +109,8 @@ void	waiting(t_philo *philos);
 void	*philo_routines(void *arg);
 
 /* utils.c */
-long	timestamp(t_data *data);
-void	cleanup(t_data *data, int clean_mutex);
-int		handle_err(t_data *data, char *msg, int cleanup);
+long	timestamp(t_table *table);
+void	cleanup(t_table *table, int clean_mutex);
+int		handle_err(t_table *table, char *msg, int cleanup);
 
 #endif

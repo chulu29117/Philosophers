@@ -264,13 +264,13 @@ run_death()
 	dead_id=$(awk '$3 == "died" {id = $2} END {print id}' .julestestout)
 	awk -v id="$dead_id" '$2 == id' .julestestout > .julesdeathlog
 	time=$(awk '$3 == "died" {print $1}' .julesdeathlog)
-	last_meal=$(awk '$4 == "eating" {time = $1} END {print time}' .julesdeathlog)
-	: "${last_meal:=0}"
+	last_ate=$(awk '$4 == "eating" {time = $1} END {print time}' .julesdeathlog)
+	: "${last_ate:=0}"
 	awk '$2 == "1"' .julestestout > .julesphilo1log
-	variance=$((time - last_meal))
-	if [[ ! $time =~ ^[0-9]+$ ]] || [[ ! $last_meal =~ ^[0-9]+$ ]]; then
+	variance=$((time - last_ate))
+	if [[ ! $time =~ ^[0-9]+$ ]] || [[ ! $last_ate =~ ^[0-9]+$ ]]; then
 		echo -n "❌"
-		echo -e "$test_desc: Timestamp error: Non numerical\n\tTime of death: $time Last meal: $last_meal\n" >> philo_trace
+		echo -e "$test_desc: Timestamp error: Non numerical\n\tTime of death: $time Last meal: $last_ate\n" >> philo_trace
 	elif [[ ! $variance =~ ^[0-9]+$ ]]; then
 		echo -n "❌"
 		echo -e "$test_desc: Calculation error: Non numerical\n\tDifference: $variance\n" >> philo_trace

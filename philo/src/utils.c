@@ -6,55 +6,51 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:29:14 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 09:55:44 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 12:26:22 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-long	timestamp(t_data *data)
+long	timestamp(t_table *table)
 {
 	struct timeval	time;
 	
 	if (gettimeofday(&time, NULL) < 0)
 	{
-		data->stop_sim = true;
+		table->stop = true;
 		return (-1);
 	}
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	cleanup(t_data *data, int clean_mutex)
+void	cleanup(t_table *table, int clean_mutex)
 {
 	int	i;
 	
 	i = -1;
-	if (data)
+	if (table)
 	{
-		if (data->philos)
+		if (table->philos)
 		{
-			while (++i < data->N_philos)
-				pthread_mutex_destroy(&data->philos[i].meal_mutex);
-			free(data->philos);
+			free(table->philos);
+			table->philos = NULL;
 		}
-		i = -1;
-		if (data->forks)
+		if (table->forks)
 		{
-			while (++i < data->N_philos)
-				pthread_mutex_destroy(&data->forks[i].hold);
-			free(data->forks);
+			while (++i < table->n_philos)
+				pthread_mutex_destroy(&table->forks[i].hold);
+			free(table->forks);
+			table->forks = NULL;
 		}
-		if (clean_mutex)
-		{
-			pthread_mutex_destroy(&data->log_mutex);
-			pthread_mutex_destroy(&data->count_mutex);
-		}
+		if (cleann_mutex)
+			pthread_mutex_destroy(&table->print_mutex);
 	}
 }
 
-int	handle_err(t_data *data, char *msg, int clean)
+int	handle_err(t_table *table, char *msg, int clean)
 {
-	cleanup(data, clean);
+	cleanup(table, clean);
 	printf("%s\n", msg);
 	return (-1);
 }

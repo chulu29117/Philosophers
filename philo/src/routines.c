@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:41:15 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 10:36:42 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 12:21:19 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,50 +31,38 @@ void eating(t_philo *philos)
 	t_fork  *first_to_lock;
 	t_fork  *second_to_lock;
 
-	if (philos->data->stop_sim || philos->full)
+	if (philos->table->stop || philos->full)
 		return;
 	set_forks(philos, &first_to_lock, &second_to_lock);
-	// Attempt to lock first fork
 	pthread_mutex_lock(&first_to_lock->hold);
-	if (philos->data->stop_sim)
+	if (philos->table->stop)
 	{
 		pthread_mutex_unlock(&first_to_lock->hold);
 		return;
 	}
 	print_state(philos, FORK);
-
-	// Special case for 1 philosopher (you already have this)
-	if (philos->data->N_philos == 1)
+	if (philos->table->n_philos == 1)
 	{
-		// For a single philo, after taking one fork, they should die.
-		// Your single_philo unlocks it immediately and waits for t_to_die. This should cause death.
-		pthread_mutex_unlock(&first_to_lock->hold); // Release the only fork
-		ft_usleep(philos, philos->t_to_die);        // Wait until death
+		pthread_mutex_unlock(&first_to_lock->hold);
+		ft_usleep(philos, philos->t_to_die);
 		return;
 	}
-
-	// Attempt to lock second fork
 	pthread_mutex_lock(&second_to_lock->hold);
-	if (philos->data->stop_sim)
+	if (philos->table->stop)
 	{
 		pthread_mutex_unlock(&first_to_lock->hold);
 		pthread_mutex_unlock(&second_to_lock->hold);
 		return;
 	}
-	print_state(philos, FORK); // Print second fork taken
-
-	// Now they have both forks, start eating
-	start_meal(philos); // This updates last_meal and prints EATING
-	// ft_usleep(philos, philos->t_to_eat); // This is part of start_meal now.
-
-	// Release forks after eating
+	print_state(philos, FORK);
+	start_meal(philos);
 	pthread_mutex_unlock(&first_to_lock->hold);
 	pthread_mutex_unlock(&second_to_lock->hold);
 }
 
 void	sleeping(t_philo *philos)
 {
-	if (philos->data->stop_sim)
+	if (philos->table->stop)
 		return ;
 	print_state(philos, SLEEPING);
 	ft_usleep(philos, philos->t_to_sleep);
@@ -82,7 +70,7 @@ void	sleeping(t_philo *philos)
 
 void	thinking(t_philo *philos)
 {
-	if (philos->data->stop_sim)
+	if (philos->table->stop)
 		return ;
 	print_state(philos, THINKING);
 	usleep(500);
@@ -90,7 +78,7 @@ void	thinking(t_philo *philos)
 
 void	waiting(t_philo *philos)
 {
-	if (philos->data->stop_sim)
+	if (philos->table->stop)
 		return;
 	print_state(philos, THINKING);
 	ft_usleep(philos, 40);
@@ -107,19 +95,19 @@ void	*philo_routines(void *arg)
 		waiting(philos);
 	else
 		thinking(philos);
-	while (!philos->data->stop_sim)
+	while (!philos->table->stop)
 	{
 		if (check_time(philos))
 			break ;
 		eating(philos);
-		if (philos->meal_count != -1 && ++meals == philos->meal_count)
+		if (philos->eat_count != -1 && ++meals == philos->eat_count)
 		{
-			pthread_mutex_lock(&philos->data->count_mutex);
+			pthread_mutex_lock(&philos->table->count_mutex);
 			philos->full = true;
-			philos->data->full_count++;
-			if (philos->data->full_count >= philos->data->N_philos)
-				philos->data->stop_sim = true;
-			pthread_mutex_unlock(&philos->data->count_mutex);
+			philos->table->n_philo_full++;
+			if (philos->table->n_philo_full >= philos->table->n_philos)
+				philos->table->stop = true;
+			pthread_mutex_unlock(&philos->table->count_mutex);
 			break ;
 		}
 		sleeping(philos);

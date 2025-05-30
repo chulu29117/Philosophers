@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/11 23:36:10 by clu               #+#    #+#              #
-#    Updated: 2025/05/30 20:06:09 by clu              ###   ########.fr        #
+#    Updated: 2025/05/30 23:26:06 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = philo
 
 # Comiler and Flags
 CC 		= cc
-CFLAGS 	= -Wall -Werror -Wextra -g
+CFLAGS 	= -Wall -Werror -Wextra
 # Directories
 SRC_DIR = ./src
 OBJ_DIR = ./obj

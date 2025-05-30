@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:29:14 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 12:34:24 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 23:32:03 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 long	timestamp(t_table *table)
 {
 	struct timeval	time;
-	
+
 	if (gettimeofday(&time, NULL) < 0)
 	{
 		table->stop = true;
@@ -27,7 +27,7 @@ long	timestamp(t_table *table)
 void	cleanup(t_table *table, int clean_mutex)
 {
 	int	i;
-	
+
 	i = -1;
 	if (table)
 	{

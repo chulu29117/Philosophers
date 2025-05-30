@@ -6,12 +6,12 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:01:55 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 23:26:53 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef philo_H
-# define philo_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <stdlib.h>
 # include <stdio.h>

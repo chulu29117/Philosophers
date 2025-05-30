@@ -6,16 +6,19 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:02:51 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 12:23:28 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 00:28:43 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
+** Simplified atoi
+*/
 int	ft_atoi(const char *str)
 {
 	int	nb;
-	
+
 	nb = 0;
 	while (*str >= '0' && *str <= '9')
 	{
@@ -29,6 +32,10 @@ int	ft_atoi(const char *str)
 	return (nb);
 }
 
+/*
+** Validate the arguments passed to the program.
+** Check if the argument is not empty and contains only digits.
+*/
 bool	validate(char *arg)
 {
 	if (!arg || !*arg)
@@ -36,7 +43,8 @@ bool	validate(char *arg)
 	while (*arg)
 	{
 		if (*arg < '0' || *arg > '9')
-			return (handle_err(NULL, "Positive INT only in arguments", 0), false);
+			return (handle_err(NULL, "Positive INT only in arguments", 0),
+				false);
 		arg++;
 	}
 	return (true);

@@ -1,0 +1,10 @@
+valgrind \
+  --tool=memcheck \
+  --leak-check=full \
+  --show-leak-kinds=all \
+  --track-origins=yes \
+  --error-limit=no \
+  --log-file=memcheck.log \
+  ./philo 3 10000 500 500 2
+
+

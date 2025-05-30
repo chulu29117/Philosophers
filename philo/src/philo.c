@@ -6,16 +6,22 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:06:37 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 12:08:38 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 00:24:48 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
+** Initialize the philo sim.
+** Set up the table, forks, and philosophers.
+** Create threads for each philosopher.
+** Cleanup on exit.
+*/
 int	main(int argc, char **argv)
 {
 	t_table	table;
-	
+
 	table.forks = NULL;
 	table.philos = NULL;
 	if (argc < 5 || argc > 6)
@@ -25,5 +31,5 @@ int	main(int argc, char **argv)
 	if (init_threads(&table) < 0)
 		return (-1);
 	cleanup(&table, 1);
-	return (0);	
+	return (0);
 }

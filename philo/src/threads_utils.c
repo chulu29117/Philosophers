@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:09:46 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:27:58 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/30 23:31:24 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,19 @@ int	init_threads(t_table *table)
 	i = -1;
 	while (++i < table->n_philos)
 	{
-		if (pthread_create(&table->philos[i].thread, NULL, philo_routines, &table->philos[i]) != 0)
+		if (pthread_create(&table->philos[i].thread, NULL,
+				philo_routines, &table->philos[i]) != 0)
 		{
 			table->stop = true;
-			return (handle_err(table, "Failed to create philosopher thread", 1));
+			handle_err(table, "Failed to create philosopher thread", 1);
+			return (1);
 		}
 	}
 	while (i--)
 	{
 		if (pthread_join(table->philos[i].thread, NULL) != 0)
-			return (handle_err(table, "Failed to join philosopher thread", 1));
+			handle_err(table, "Failed to join philosopher thread", 1);
+		return (1);
 	}
 	return (0);
 }

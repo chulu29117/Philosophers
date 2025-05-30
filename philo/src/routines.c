@@ -6,12 +6,19 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:41:15 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:33:23 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 00:40:48 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
+** Eating routine for philosophers.
+** Each philosopher tries to take the left fork first, then the right fork.
+** If no forks available, check for death and sleep.
+** If there's only 1 philo, it will wait for the time to die.
+** If successful, they start eating.
+*/
 void	eating(t_philo *philos)
 {
 	if (philos->table->stop == true)
@@ -32,6 +39,10 @@ void	eating(t_philo *philos)
 	start_eating(philos);
 }
 
+/*
+** Sleeping routine for philosophers.
+** Show the sleeping state and sleeps for t_to_sleep ms.
+*/
 void	sleeping(t_philo *philos)
 {
 	if (philos->table->stop == true)
@@ -40,6 +51,10 @@ void	sleeping(t_philo *philos)
 	ft_usleep(philos, philos->t_to_sleep);
 }
 
+/*
+** Thinking routine for philosophers.
+** Show the thinking state and sleeps for a short time.
+*/
 void	thinking(t_philo *philos)
 {
 	if (philos->table->stop == true)
@@ -48,6 +63,10 @@ void	thinking(t_philo *philos)
 	usleep(1000);
 }
 
+/*
+** Philos wait to start routine.
+** Used to stagger the start of philosophers to avoid deadlock.
+*/
 void	wait_start(t_philo *philos)
 {
 	if (philos->table->stop == true)
@@ -56,6 +75,11 @@ void	wait_start(t_philo *philos)
 	ft_usleep(philos, 10);
 }
 
+/*
+** Main routine for each philosopher thread.
+** Each philos go through the eating, sleeping, and thinking routines.
+** Philos will stop if they reach the number of meals they need to eat.
+*/
 void	*philo_routines(void *arg)
 {
 	t_philo	*philos;

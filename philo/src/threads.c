@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:47:50 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:25:53 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 00:43:22 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	ft_usleep(t_philo *philos, long duration)
 	long	start;
 
 	start = timestamp(philos->table);
-	while (philos->table->stop == false && 
-		   (timestamp(philos->table) - start) < duration)
+	while (philos->table->stop == false
+		&& (timestamp(philos->table) - start) < duration)
 	{
 		usleep(1000);
 		check_death(philos, SLEEP);
 	}
 }
 
-long check_death(t_philo *philos, int type)
+long	check_death(t_philo *philos, int type)
 {
 	if (type == EATING)
 		return (timestamp(philos->table) - philos->table->start_time);
@@ -41,28 +41,28 @@ long check_death(t_philo *philos, int type)
 	return (0);
 }
 
-void print_state(t_philo *philos, int state)
+void	print_state(t_philo *philos, int state)
 {
 	if (philos->table->stop == true && state != DIED)
 		return ;
 	pthread_mutex_lock(&philos->table->print_mutex);
 	if (state == FORK && philos->table->stop == false)
-		printf("%ld %d has taken a fork\n", 
-			timestamp(philos->table) - philos->table->start_time, philos->id + 1);
+		printf("%ld %d has taken a fork\n", timestamp(philos->table)
+			- philos->table->start_time, philos->id + 1);
 	else if (state == EATING && philos->table->stop == false)
-		printf("%ld %d is eating\n", 
-			timestamp(philos->table) - philos->table->start_time, philos->id + 1);
+		printf("%ld %d is eating\n", timestamp(philos->table)
+			- philos->table->start_time, philos->id + 1);
 	else if (state == SLEEP && philos->table->stop == false)
-		printf("%ld %d is sleeping\n", 
-			timestamp(philos->table) - philos->table->start_time, philos->id + 1);
+		printf("%ld %d is sleeping\n", timestamp(philos->table)
+			- philos->table->start_time, philos->id + 1);
 	else if (state == THINK && philos->table->stop == false)
-		printf("%ld %d is thinking\n", 
-			timestamp(philos->table) - philos->table->start_time, philos->id + 1);
+		printf("%ld %d is thinking\n", timestamp(philos->table)
+			- philos->table->start_time, philos->id + 1);
 	else if (state == DIED && philos->table->died == false)
 	{
 		philos->table->died = true;
-		printf("%ld %d died\n", 
-			timestamp(philos->table) - philos->table->start_time, philos->id + 1);
+		printf("%ld %d died\n", timestamp(philos->table)
+			- philos->table->start_time, philos->id + 1);
 	}
 	pthread_mutex_unlock(&philos->table->print_mutex);
 }

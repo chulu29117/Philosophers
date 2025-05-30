@@ -99,3 +99,183 @@ Simulation start: 0 Death: 1
 -- Death Tests --
 
 ---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+4 210 100 100 10: Philosopher died
+	
+
+11 900 150 90 20: Timestamp error: Non numerical
+	Philo 1 eating timestamp: 1 Philo 1 sleep timestamp: 151 Philo 1 think timestamp: 242 Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+5 300 60 60 15: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+10 500 100 100 50: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+4 600 200 200 5: Timestamp error: Non numerical
+	Philo 1 eating timestamp:  Philo 1 sleep timestamp:  Philo 1 think timestamp:  Philo 2 eating timestamp:  Philo 2 sleep timestamp:  Philo 2 think timestamp: 
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+10 199 100 100 10: Too many philosophers died
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+10 500 100 100 50: Philosopher died
+	
+
+-- Death Tests --
+
+---- TRACE ENDS ----

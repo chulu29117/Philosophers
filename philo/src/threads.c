@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:47:50 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 15:08:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 18:50:55 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ void	ft_usleep(t_philo *philos, long duration)
 		usleep(1000);
 }
 
+/*
+** Print the state of a philosopher.
+*/
 void	print_state(t_philo *philos, int state)
 {
 	if (philos->table->stop == true && state != DIED)
@@ -53,20 +56,6 @@ void	print_state(t_philo *philos, int state)
 	pthread_mutex_unlock(&philos->table->print_mutex);
 }
 
-void	start_eating(t_philo *philos)
-{
-	print_state(philos, FORK);
-	print_state(philos, EATING);
-	pthread_mutex_lock(&philos->table->time_mutex);
-	philos->last_ate = timestamp(philos->table);
-	pthread_mutex_unlock(&philos->table->time_mutex);
-	ft_usleep(philos, philos->t_to_eat);
-	philos->l_fork->free = true;
-	pthread_mutex_unlock(&philos->l_fork->hold);
-	philos->r_fork->free = true;
-	pthread_mutex_unlock(&philos->r_fork->hold);
-}
-
 int	thread_err(t_table *table, char *msg, int count)
 {
 	while (count--)
@@ -74,4 +63,15 @@ int	thread_err(t_table *table, char *msg, int count)
 	cleanup(table, 1);
 	printf("%s\n", msg);
 	return (-1);
+}
+
+/*
+** Eating routine for a single philosopher.
+** Takes the left fork, waits for the time to die,
+*/
+void	single_philo(t_philo *philos)
+{
+	philos->l_fork->free = true;
+	pthread_mutex_unlock(&philos->l_fork->hold);
+	ft_usleep(philos, philos->t_to_die);
 }

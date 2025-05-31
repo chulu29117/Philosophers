@@ -6,11 +6,30 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:02:24 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 18:02:36 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 19:16:04 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+/*
+** Philo eating routine if both forks are available.
+** Takes the left fork, then the right fork.
+** If successful, it starts eating and updates the last_ate time.
+*/
+static void	start_eating(t_philo *philos)
+{
+	t_table	*table;
+
+	table = philos->table;
+	print_state(philos, EATING);
+	pthread_mutex_lock(&table->time_mutex);
+	philos->last_ate = timestamp(table);
+	pthread_mutex_unlock(&table->time_mutex);
+	ft_usleep(philos, philos->t_to_eat);
+	pthread_mutex_unlock(&philos->r_fork->hold);
+	pthread_mutex_unlock(&philos->l_fork->hold);
+}
 
 /*
 ** Eating routine for philosophers.
@@ -21,28 +40,26 @@
 */
 void	eating(t_philo *philos)
 {
-	if (philos->table->stop == true)
-		return ;
-	while (!philos->l_fork->free && !philos->table->stop)
-		usleep(1000);
-	if (philos->table->stop)
+	t_table	*table;
+
+	table = philos->table;
+	if (table->stop)
 		return ;
 	pthread_mutex_lock(&philos->l_fork->hold);
-	if (try_l_fork(philos))
-		return ;
 	print_state(philos, FORK);
-	if (philos->table->n_philos == 1)
-		return (single_philo(philos));
-	while (!philos->r_fork->free && !philos->table->stop)
-		usleep(1000);
-	if (philos->table->stop)
+	if (table->n_philos == 1)
 	{
-		pthread_mutex_unlock(&philos->l_fork->hold);
+		single_philo(philos);
 		return ;
 	}
 	pthread_mutex_lock(&philos->r_fork->hold);
-	if (try_r_fork(philos))
+	if (table->stop)
+	{
+		pthread_mutex_unlock(&philos->r_fork->hold);
+		pthread_mutex_unlock(&philos->l_fork->hold);
 		return ;
+	}
+	print_state(philos, FORK);
 	start_eating(philos);
 }
 

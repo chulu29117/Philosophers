@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 16:26:11 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 19:10:00 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	init_philos(t_philo *philos, int index, char **argv, t_table *table)
 		philos->eat_count = -2;
 	if (philos->t_to_die < 0 || philos->t_to_eat < 0
 		|| philos->t_to_sleep < 0 || philos->eat_count == -1)
-		return (handle_err(table, "Error: bad arguments", 1));
+		return (handle_err(table, "Error: Positive INT args only", 1));
 	philos->table = table;
 	philos->id = index;
 	philos->philo_thread = 0;
@@ -41,17 +41,24 @@ int	init_philos(t_philo *philos, int index, char **argv, t_table *table)
 	return (0);
 }
 
-int	init_table(t_table *table)
+static int	init_mutexes(t_table *table)
 {
-	int	i;
-
-	i = -1;
 	if (pthread_mutex_init(&table->print_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init print_mutex", 0));
 	if (pthread_mutex_init(&table->full_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init full_mutex", 0));
 	if (pthread_mutex_init(&table->time_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init time_mutex", 0));
+	return (0);
+}
+
+int	init_table(t_table *table)
+{
+	int	i;
+
+	i = -1;
+	if (init_mutexes(table) < 0)
+		return (-1);
 	table->forks = malloc(table->n_philos * sizeof(t_fork));
 	if (!table->forks)
 		return (handle_err(table, "Failed to malloc forks", 1));

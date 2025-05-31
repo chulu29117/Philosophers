@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:02:51 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 01:28:10 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 19:07:50 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ int	ft_atoi(const char *str)
 bool	validate(char *arg)
 {
 	if (!arg || !*arg)
-		return (handle_err(NULL, "Empty arguments", 0));
+		return (false);
 	while (*arg)
 	{
 		if (*arg < '0' || *arg > '9')
-			return (handle_err(NULL, "Positive INT only in arguments", 0));
+			return (false);
 		arg++;
 	}
 	return (true);

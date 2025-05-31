@@ -6,19 +6,15 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:09:46 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 18:20:28 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 18:35:56 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	single_philo(t_philo *philos)
-{
-	philos->l_fork->free = true;
-	pthread_mutex_unlock(&philos->l_fork->hold);
-	ft_usleep(philos, philos->t_to_die);
-}
-
+/*
+** Try to take the left fork.
+*/
 bool	try_l_fork(t_philo *philos)
 {
 	philos->l_fork->free = false;
@@ -31,6 +27,9 @@ bool	try_l_fork(t_philo *philos)
 	return (false);
 }
 
+/*
+** Try to take the right fork.
+*/
 bool	try_r_fork(t_philo *philos)
 {
 	philos->r_fork->free = false;
@@ -45,6 +44,9 @@ bool	try_r_fork(t_philo *philos)
 	return (false);
 }
 
+/*
+** Create threads for each philosopher and a monitor thread.
+*/
 int	start_threads(t_table *table, pthread_t *monitor_thread)
 {
 	int	i;
@@ -67,6 +69,9 @@ int	start_threads(t_table *table, pthread_t *monitor_thread)
 	return (0);
 }
 
+/*
+** Join all philosopher threads and the monitor thread.
+*/
 int	join_threads(t_table *table, pthread_t monitor_thread)
 {
 	int	i;
@@ -81,37 +86,6 @@ int	join_threads(t_table *table, pthread_t monitor_thread)
 		return (handle_err(table, "Monitor thread join failed", 1));
 	return (0);
 }
-
-// int	init_threads(t_table *table)
-// {
-// 	int			i;
-// 	pthread_t	monitor_thread;
-
-// 	i = -1;
-// 	while (++i < table->n_philos)
-// 	{
-// 		if (pthread_create(&table->philos[i].philo_thread, NULL,
-// 				philo_routines, &table->philos[i]) != 0)
-// 		{
-// 			table->stop = true;
-// 			return (handle_err(table, "Philo thread failed", 1));
-// 		}
-// 	}
-// 	if (pthread_create(&monitor_thread, NULL, monitor, table) != 0)
-// 	{
-// 		table->stop = true;
-// 		return (thread_err(table, "Monitor thread failed", table->n_philos));
-// 	}
-// 	i = table->n_philos;
-// 	while (i-- > 0)
-// 	{
-// 		if (pthread_join(table->philos[i].philo_thread, NULL) != 0)
-// 			return (handle_err(table, "Failed to join philosopher thread", 1));
-// 	}
-// 	if (pthread_join(monitor_thread, NULL) != 0)
-// 		return (handle_err(table, "Failed to join monitor thread", 1));
-// 	return (0);
-// }
 
 /*
 ** This function will run in its own thread.

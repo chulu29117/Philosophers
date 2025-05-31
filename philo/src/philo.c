@@ -6,35 +6,27 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:06:37 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 19:09:51 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 21:21:28 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
 /*
-** Initialize the philo sim.
-** Set up the table, forks, and philosophers.
-** Create threads for each philosopher.
-** Cleanup on exit.
+** Parse and validate the arguments.
+** Set up the table stuct, with forks, philos, and mutexes.
+** Start the philo threads and a monitor thread.
+** Join all threads and clean up resources upon completion.
 */
 int	main(int argc, char **argv)
 {
 	t_table		table;
 	pthread_t	monitor_thread;
-	int			i;
 
-	table.forks = NULL;
-	table.philos = NULL;
-	i = 1;
 	if (argc < 5 || argc > 6)
 		return (handle_err(NULL, USAGE, 0));
-	while (i < argc)
-	{
-		if (!validate(argv[i]))
-			return (handle_err(NULL, "Error: positive INT args only", 0));
-		i++;
-	}
+	table.forks = NULL;
+	table.philos = NULL;
 	if (set_table(&table, argv) < 0)
 		return (-1);
 	if (start_threads(&table, &monitor_thread) < 0)

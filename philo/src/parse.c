@@ -6,18 +6,15 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:02:51 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 19:07:50 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 21:08:43 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-/*
-** Simplified atoi
-*/
 int	ft_atoi(const char *str)
 {
-	int	nb;
+	long	nb;
 
 	nb = 0;
 	while (*str >= '0' && *str <= '9')

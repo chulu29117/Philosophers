@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 19:10:00 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 21:09:23 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,6 @@ int	init_table(t_table *table)
 
 int	set_table(t_table *table, char **argv)
 {
-	int	i;
-
-	i = 0;
-	while (argv[++i])
-	{
-		if (!validate(argv[i]))
-			return (-1);
-	}
 	table->n_philos = ft_atoi(argv[1]);
 	if (table->n_philos < 0 || table->n_philos > 1000)
 		return (handle_err(table,

@@ -123,3 +123,89 @@ Expected: 100 Actual:
 -- Death Tests --
 
 ---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+2 100 2147483648 60: Program timed out. Possible infinite loop
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+4 410 200 200 10: Philosophers did not eat for the correct time
+	Expected: 200 Actual: 
+
+-- Death Tests --
+
+---- TRACE ENDS ----
+
+============================================================
+
+----- TRACE BEGINS -----
+
+-- Basic Error Tests --
+
+-- One Philosopher Tests --
+
+-- No Death Tests --
+
+-- Death Tests --
+
+---- TRACE ENDS ----

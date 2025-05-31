@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/11 23:36:10 by clu               #+#    #+#              #
-#    Updated: 2025/05/31 18:04:29 by clu              ###   ########.fr        #
+#    Updated: 2025/05/31 21:25:30 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,9 +33,9 @@ SRC = 	$(SRC_DIR)philo.c \
 		$(SRC_DIR)routines_utils.c \
 		$(SRC_DIR)threads.c \
 		$(SRC_DIR)threads_utils.c \
-		$(SRC_DIR)utils.c \
-		$(SRC_DIR)parse.c
+		$(SRC_DIR)utils.c
 
+# Object files
 OBJ = 	$(SRC:$(SRC_DIR)%=$(OBJ_DIR)/%)
 OBJ := 	$(OBJ:.c=.o)
 

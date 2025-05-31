@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 19:03:56 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 21:24:12 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,8 @@ typedef struct s_philo
 /* Functions */
 /* parse.c */
 int		ft_atoi(const char *str);
-bool	validate(char *arg);
 
 /* init.c */
-// int		init_threads(t_table *table);
 int		init_philos(t_philo *philos, int index, char **argv, t_table *table);
 int		init_table(t_table *table);
 int		set_philos(t_table *table, char **argv);

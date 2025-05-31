@@ -6,12 +6,37 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:29:14 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 15:08:24 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 21:52:05 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+int	ft_atoi(const char *str)
+{
+	long	nb;
+
+	nb = 0;
+	if (!str || *str == '\0')
+		return (-1);
+	while (*str >= '0' && *str <= '9')
+	{
+		if (nb > (INT_MAX / 10) || (nb == (INT_MAX / 10)
+			&& (*str - '0') > (INT_MAX % 10)))
+			return (-1);
+		nb = nb * 10 + (*str - '0');
+		str++;
+	}
+	if (nb == 0)
+		return (-1);
+	return (nb);
+}
+
+/*
+** Getting the current time in ms.
+** If gettimeofday fails, set stop flag to terminate the program.
+** Return the current time in ms since epoch.
+*/
 long	timestamp(t_table *table)
 {
 	struct timeval	time;

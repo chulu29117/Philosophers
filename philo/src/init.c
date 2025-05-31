@@ -6,12 +6,17 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 21:09:23 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 21:55:04 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
+** Initialize the philo struct.
+** Set the philo details with given arguments.
+** Setting left and right forks based on the index.
+*/
 int	init_philos(t_philo *philos, int index, char **argv, t_table *table)
 {
 	int	argc;
@@ -28,8 +33,8 @@ int	init_philos(t_philo *philos, int index, char **argv, t_table *table)
 		philos->eat_count = ft_atoi(argv[5]);
 	else
 		philos->eat_count = -2;
-	if (philos->t_to_die < 0 || philos->t_to_eat < 0
-		|| philos->t_to_sleep < 0 || philos->eat_count == -1)
+	if (philos->t_to_die == -1 || philos->t_to_eat == -1
+		|| philos->t_to_sleep == -1 || philos->eat_count == -1)
 		return (handle_err(table, "Error: Positive INT args only", 1));
 	philos->table = table;
 	philos->id = index;
@@ -41,6 +46,9 @@ int	init_philos(t_philo *philos, int index, char **argv, t_table *table)
 	return (0);
 }
 
+/*
+** Initialize all mutexes used in the table struct.
+*/
 static int	init_mutexes(t_table *table)
 {
 	if (pthread_mutex_init(&table->print_mutex, NULL) != 0)
@@ -52,6 +60,12 @@ static int	init_mutexes(t_table *table)
 	return (0);
 }
 
+/*
+** Initialize the table struct.
+** Allocate memory for forks struct based on the number of philos.
+** Initialize each fork's mutex and set them as available to take.
+** Set start time to the current timestamp.
+*/
 int	init_table(t_table *table)
 {
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 15:29:15 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 16:26:11 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	init_table(t_table *table)
 	i = -1;
 	if (pthread_mutex_init(&table->print_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init print_mutex", 0));
-    if (pthread_mutex_init(&table->full_mutex, NULL) != 0)
+	if (pthread_mutex_init(&table->full_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init full_mutex", 0));
-    if (pthread_mutex_init(&table->time_mutex, NULL) != 0)
+	if (pthread_mutex_init(&table->time_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init time_mutex", 0));
 	table->forks = malloc(table->n_philos * sizeof(t_fork));
 	if (!table->forks)
@@ -85,7 +85,8 @@ int	set_table(t_table *table, char **argv)
 	}
 	table->n_philos = ft_atoi(argv[1]);
 	if (table->n_philos < 0 || table->n_philos > 1000)
-		return (handle_err(table, "Error: bad arguments", 0));
+		return (handle_err(table,
+				"Error: N philos must be positive INT up to 1000 ", 0));
 	table->stop = false;
 	table->n_philos_full = 0;
 	if (set_philos(table, argv) < 0)

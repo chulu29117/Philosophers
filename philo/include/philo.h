@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 15:08:06 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 18:16:54 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ typedef struct s_philo
 	t_fork			*r_fork;
 	pthread_t		philo_thread;
 	_Atomic bool	full;
+	_Atomic long	last_ate;
 	int				id;
 	int				eat_count;
 	long			t_to_die;
 	long			t_to_eat;
 	long			t_to_sleep;
-	long			last_ate;
 }	t_philo;
 
 /* Functions */
@@ -82,7 +82,7 @@ int		ft_atoi(const char *str);
 bool	validate(char *arg);
 
 /* init.c */
-int		init_threads(t_table *table);
+// int		init_threads(t_table *table);
 int		init_philos(t_philo *philos, int index, char **argv, t_table *table);
 int		init_table(t_table *table);
 int		set_philos(t_table *table, char **argv);
@@ -98,6 +98,8 @@ int		thread_err(t_table *table, char *msg, int count);
 void	single_philo(t_philo *philos);
 bool	try_l_fork(t_philo *philos);
 bool	try_r_fork(t_philo *philos);
+int		start_threads(t_table *table, pthread_t *monitor_thread);
+int		join_threads(t_table *table, pthread_t monitor_thread);
 void	*monitor(void *arg);
 
 /* routines.c */

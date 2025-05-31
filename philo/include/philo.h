@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:32:05 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 23:26:53 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 15:08:06 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 ** Usage message for invalid arguments
 */
 # define USAGE "Usage: ./philo number_of_philosophers time_to_die time_to_eat \
-time_to_sleep [number_of_times_each_philosopher_must_eat]\n"
+time_to_sleep [number_of_times_each_philosopher_must_eat]"
 
 /* Status codes for print_status() */
 # define FORK	1
@@ -52,7 +52,8 @@ typedef struct s_table
 	t_philo			*philos;
 	t_fork			*forks;
 	pthread_mutex_t	print_mutex;
-	_Atomic bool	limit;
+	pthread_mutex_t	full_mutex;
+	pthread_mutex_t	time_mutex;
 	_Atomic bool	stop;
 	_Atomic bool	died;
 	int				n_philos;
@@ -65,7 +66,7 @@ typedef struct s_philo
 	t_table			*table;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
-	pthread_t		thread;
+	pthread_t		philo_thread;
 	_Atomic bool	full;
 	int				id;
 	int				eat_count;
@@ -85,11 +86,10 @@ int		init_threads(t_table *table);
 int		init_philos(t_philo *philos, int index, char **argv, t_table *table);
 int		init_table(t_table *table);
 int		set_philos(t_table *table, char **argv);
-int		set_table(t_table *table, int argc, char **argv);
+int		set_table(t_table *table, char **argv);
 
 /* threads.c */
 void	ft_usleep(t_philo *philos, long duration);
-long	check_death(t_philo *philos, int type);
 void	print_state(t_philo *philos, int state);
 void	start_eating(t_philo *philos);
 int		thread_err(t_table *table, char *msg, int count);

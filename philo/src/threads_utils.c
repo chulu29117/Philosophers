@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 23:09:46 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 23:31:24 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 15:08:39 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,68 @@ bool	try_r_fork(t_philo *philos)
 
 int	init_threads(t_table *table)
 {
-	int	i;
+	int			i;
+	pthread_t	monitor_thread;
 
 	i = -1;
 	while (++i < table->n_philos)
 	{
-		if (pthread_create(&table->philos[i].thread, NULL,
+		if (pthread_create(&table->philos[i].philo_thread, NULL,
 				philo_routines, &table->philos[i]) != 0)
 		{
 			table->stop = true;
-			handle_err(table, "Failed to create philosopher thread", 1);
-			return (1);
+			return (handle_err(table, "Failed to create philosopher thread", 1));
 		}
 	}
-	while (i--)
+	if (pthread_create(&monitor_thread, NULL, monitor, table) != 0)
 	{
-		if (pthread_join(table->philos[i].thread, NULL) != 0)
-			handle_err(table, "Failed to join philosopher thread", 1);
-		return (1);
+		table->stop = true;
+		return (thread_err(table, "Failed to create monitor thread", table->n_philos));
 	}
+	i = table->n_philos;
+	while (i-- > 0)
+	{
+		if (pthread_join(table->philos[i].philo_thread, NULL) != 0)
+			return (handle_err(table, "Failed to join philosopher thread", 1));
+	}
+	if (pthread_join(monitor_thread, NULL) != 0)
+		return (handle_err(table, "Failed to join monitor thread", 1));
 	return (0);
 }
+
+/*
+** This function will run in its own thread.
+** It periodically wakes up, iterates through all philosophers,
+** and if it finds one whose (current_time – last_ate) ≥ t_to_die,
+** it flags `table->stop = true` and prints the death message.
+*/
+void	*monitor(void *arg)
+{
+	t_table	*table;
+	int		i;
+	long	now;
+	long	last_ate_time;
+
+	table = (t_table *)arg;
+	while (!table->stop)
+	{
+		usleep(1000);
+		now = timestamp(table);
+		i = 0;
+		while (i < table->n_philos && !table->stop)
+		{
+			pthread_mutex_lock(&table->time_mutex);
+			last_ate_time = table->philos[i].last_ate;
+			pthread_mutex_unlock(&table->time_mutex);
+			if (now - last_ate_time >= table->philos[i].t_to_die)
+			{
+				table->stop = true;
+				print_state(&table->philos[i], DIED);
+				break ;
+			}
+			i++;
+		}
+	}
+	return (NULL);
+}
+ 

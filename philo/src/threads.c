@@ -6,12 +6,17 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:47:50 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 00:43:22 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 15:08:30 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
+** A cooler sleep function that allows interruption for checking death.
+** It tells the philosopher to sleep for a specified duration in ms.
+** Loop through until the specified time, it sleeps for 1 ms and check death.
+*/
 void	ft_usleep(t_philo *philos, long duration)
 {
 	long	start;
@@ -19,26 +24,7 @@ void	ft_usleep(t_philo *philos, long duration)
 	start = timestamp(philos->table);
 	while (philos->table->stop == false
 		&& (timestamp(philos->table) - start) < duration)
-	{
 		usleep(1000);
-		check_death(philos, SLEEP);
-	}
-}
-
-long	check_death(t_philo *philos, int type)
-{
-	if (type == EATING)
-		return (timestamp(philos->table) - philos->table->start_time);
-	else if (type == SLEEP)
-	{
-		if (timestamp(philos->table) - philos->t_to_die >= philos->last_ate)
-		{
-			philos->table->stop = true;
-			print_state(philos, DIED);
-			return (1);
-		}
-	}
-	return (0);
 }
 
 void	print_state(t_philo *philos, int state)
@@ -71,7 +57,9 @@ void	start_eating(t_philo *philos)
 {
 	print_state(philos, FORK);
 	print_state(philos, EATING);
+	pthread_mutex_lock(&philos->table->time_mutex);
 	philos->last_ate = timestamp(philos->table);
+	pthread_mutex_unlock(&philos->table->time_mutex);
 	ft_usleep(philos, philos->t_to_eat);
 	philos->l_fork->free = true;
 	pthread_mutex_unlock(&philos->l_fork->hold);
@@ -82,7 +70,7 @@ void	start_eating(t_philo *philos)
 int	thread_err(t_table *table, char *msg, int count)
 {
 	while (count--)
-		pthread_join(table->philos[count].thread, NULL);
+		pthread_join(table->philos[count].philo_thread, NULL);
 	cleanup(table, 1);
 	printf("%s\n", msg);
 	return (-1);

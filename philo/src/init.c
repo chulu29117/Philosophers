@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:56:13 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 13:08:27 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 15:29:15 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	init_philos(t_philo *philos, int index, char **argv, t_table *table)
 		return (handle_err(table, "Error: bad arguments", 1));
 	philos->table = table;
 	philos->id = index;
-	philos->thread = 0;
+	philos->philo_thread = 0;
 	philos->full = false;
 	philos->l_fork = &table->forks[index];
 	philos->r_fork = &table->forks[(index + 1) % table->n_philos];
@@ -48,6 +48,10 @@ int	init_table(t_table *table)
 	i = -1;
 	if (pthread_mutex_init(&table->print_mutex, NULL) != 0)
 		return (handle_err(table, "Failed to init print_mutex", 0));
+    if (pthread_mutex_init(&table->full_mutex, NULL) != 0)
+		return (handle_err(table, "Failed to init full_mutex", 0));
+    if (pthread_mutex_init(&table->time_mutex, NULL) != 0)
+		return (handle_err(table, "Failed to init time_mutex", 0));
 	table->forks = malloc(table->n_philos * sizeof(t_fork));
 	if (!table->forks)
 		return (handle_err(table, "Failed to malloc forks", 1));
@@ -65,10 +69,11 @@ int	init_table(t_table *table)
 	table->start_time = timestamp(table);
 	if (table->start_time < 0)
 		return (handle_err(table, "Failed to gettimeofday", 1));
+	table->n_philos_full = 0;
 	return (0);
 }
 
-int	set_table(t_table *table, int argc, char **argv)
+int	set_table(t_table *table, char **argv)
 {
 	int	i;
 
@@ -83,10 +88,6 @@ int	set_table(t_table *table, int argc, char **argv)
 		return (handle_err(table, "Error: bad arguments", 0));
 	table->stop = false;
 	table->n_philos_full = 0;
-	if (argc == 6)
-		table->limit = true;
-	else
-		table->limit = false;
 	if (set_philos(table, argv) < 0)
 		return (-1);
 	return (0);

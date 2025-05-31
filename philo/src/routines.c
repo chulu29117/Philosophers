@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:41:15 by clu               #+#    #+#             */
-/*   Updated: 2025/05/31 00:40:48 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 14:42:24 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,25 @@ void	eating(t_philo *philos)
 {
 	if (philos->table->stop == true)
 		return ;
-	while (philos->l_fork->free == false)
-		check_death(philos, SLEEP);
+	while (!philos->l_fork->free && !philos->table->stop)
+		usleep(1000);
+	if (philos->table->stop)
+		return ;
 	pthread_mutex_lock(&philos->l_fork->hold);
-	if (try_l_fork(philos) == 1)
+	if (try_l_fork(philos))
 		return ;
 	print_state(philos, FORK);
 	if (philos->table->n_philos == 1)
 		return (single_philo(philos));
-	while (philos->r_fork->free == false)
-		check_death(philos, SLEEP);
+	while (!philos->r_fork->free && !philos->table->stop)
+		usleep(1000);
+	if (philos->table->stop)
+	{
+		pthread_mutex_unlock(&philos->l_fork->hold);
+		return ;
+	}
 	pthread_mutex_lock(&philos->r_fork->hold);
-	if (try_r_fork(philos) == true)
+	if (try_r_fork(philos))
 		return ;
 	start_eating(philos);
 }
@@ -79,31 +86,48 @@ void	wait_start(t_philo *philos)
 ** Main routine for each philosopher thread.
 ** Each philos go through the eating, sleeping, and thinking routines.
 ** Philos will stop if they reach the number of meals they need to eat.
+** If the number of philos is not 1, sleep and think after eating.
 */
 void	*philo_routines(void *arg)
 {
 	t_philo	*philos;
-	int		i;
+	int		meals_eaten;
 
 	philos = (t_philo *)arg;
-	i = 0;
+	meals_eaten = 0;
 	if (philos->id % 2 != 0)
 		wait_start(philos);
 	else
 		thinking(philos);
 	while (philos->table->stop == false)
 	{
-		if (philos->table->stop == true)
-			break ;
-		if (check_death(philos, SLEEP) == 1)
-			break ;
-		if (philos->eat_count != -2 && i++ == philos->eat_count)
-			break ;
 		eating(philos);
-		if (philos->table->n_philos != 1)
+		if (philos->table->stop)
+			break ;
+		meals_eaten++;
+		if (philos->eat_count != -2 && meals_eaten == philos->eat_count)
+		{
+			pthread_mutex_lock(&philos->table->full_mutex);
+			{
+				if (!philos->full)
+				{
+					philos->full = true;
+					philos->table->n_philos_full++;
+					if (philos->table->n_philos_full == philos->table->n_philos)
+						philos->table->stop = true;
+				}
+			}
+			pthread_mutex_unlock(&philos->table->full_mutex);
+			return (NULL);
+		}
+		if (philos->table->n_philos > 1)
 		{
 			sleeping(philos);
+			if (philos->table->stop)
+				break ;
 			thinking(philos);
+			if (philos->table->stop)
+				break ;
 		}
 	}
 	return (NULL);

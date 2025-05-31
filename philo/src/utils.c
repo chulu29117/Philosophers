@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:29:14 by clu               #+#    #+#             */
-/*   Updated: 2025/05/30 23:32:03 by clu              ###   ########.fr       */
+/*   Updated: 2025/05/31 15:08:24 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,21 @@ void	cleanup(t_table *table, int clean_mutex)
 {
 	int	i;
 
-	i = -1;
-	if (table)
+	if (!table)
+		return ;
+	if (clean_mutex)
 	{
-		if (table->philos)
-		{
-			free(table->philos);
-			table->philos = NULL;
-		}
-		if (table->forks)
-		{
-			while (++i < table->n_philos)
-				pthread_mutex_destroy(&table->forks[i].hold);
-			free(table->forks);
-			table->forks = NULL;
-		}
-		if (clean_mutex)
-			pthread_mutex_destroy(&table->print_mutex);
+		i = -1;
+		while (++i < table->n_philos)
+			pthread_mutex_destroy(&table->forks[i].hold);
+		pthread_mutex_destroy(&table->print_mutex);
+		pthread_mutex_destroy(&table->full_mutex);
+		pthread_mutex_destroy(&table->time_mutex);
 	}
+	if (table->forks)
+		free(table->forks);
+	if (table->philos)
+		free(table->philos);
 }
 
 int	handle_err(t_table *table, char *msg, int clean)
